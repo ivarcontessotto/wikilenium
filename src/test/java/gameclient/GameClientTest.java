@@ -3,6 +3,9 @@ package gameclient;
 import org.junit.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+/***
+ * Tests that the game client is working properly.
+ */
 public class GameClientTest {
 
     private GameClient gameClient;
@@ -82,6 +85,17 @@ public class GameClientTest {
                 .startAtWikiPage("https://de.wikipedia.org/wiki/Kredit")
                 .clickAtMostNLinks(1)
                 .untilWikiPageIs("Übereignung")
+                .run();
+
+        Assert.assertTrue(result);
+    }
+
+    @Test
+    public void test_FirstLinkIsInsideBracketsAndHasUnreadableCharacters_ShouldClickFirstLinkOutsideBrackets() {
+        boolean result = gameClient
+                .startAtWikiPage("https://de.wikipedia.org/wiki/Deutschland")
+                .clickAtMostNLinks(1)
+                .untilWikiPageIs("Bundesstaat (Föderaler Staat)")
                 .run();
 
         Assert.assertTrue(result);

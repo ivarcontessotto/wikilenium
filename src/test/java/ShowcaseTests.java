@@ -2,6 +2,9 @@ import gameclient.GameClient;
 import org.junit.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+/***
+ * Tests for showcase
+ */
 public class ShowcaseTests {
 
     private GameClient gameClient;
@@ -22,7 +25,7 @@ public class ShowcaseTests {
     }
 
     @Test
-    public void test_StartFromBilanz_ClickLimitIsSeven_ShouldReachPhilosophie() {
+    public void showcaseTest_Successful() {
         boolean result = gameClient
                 .startAtWikiPage("https://de.wikipedia.org/wiki/Bilanz")
                 .clickAtMostNLinks(7)
@@ -33,7 +36,18 @@ public class ShowcaseTests {
     }
 
     @Test
-    public void test_StartFromCocaCola_ClickLimitIsSeven_ShouldReachPhilosophie() {
+    public void showcaseTest_Fail() {
+        boolean result = gameClient
+                .startAtWikiPage("https://de.wikipedia.org/wiki/Heinrich_Freiherr_von_Stackelberg")
+                .clickAtMostNLinks(7)
+                .untilWikiPageIs("Philosophie")
+                .run();
+
+        Assert.assertTrue(result);
+    }
+
+    @Test
+    public void showcaseTest_Loop_Fail() {
         boolean result = gameClient
                 .startAtWikiPage("https://de.wikipedia.org/wiki/Coca-Cola")
                 .clickAtMostNLinks(7)

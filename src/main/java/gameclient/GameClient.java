@@ -62,7 +62,7 @@ public class GameClient {
 
     private boolean runTest() {
         driver.get(startUrl);
-        System.out.println(String.format("Start url: %s", startUrl));
+        System.out.println("Start url: " + startUrl);
         clickLinksUntilPageFoundOrLimitReached();
         if (!currentPageHasExpectedName()) {
             System.out.println(String.format("Expected wiki page to be <%s>' but found <%s>", expectedWikiPageName, getCurrentWikiPageName()));
@@ -102,12 +102,15 @@ public class GameClient {
 
     private WebElement getFirstMatchingLinkInSection(WebElement pTag) {
         return pTag.findElements(By.xpath("a")).stream()
+                .filter(a -> !a.getText().isEmpty())
                 .filter(a -> linkIsNotInBrackets(pTag.getText(), a.getText()))
                 .findFirst()
                 .orElse(null);
     }
 
     private boolean linkIsNotInBrackets(String sectionText, String linkText) {
+        System.out.println("Current link: " + linkText);
+        System.out.println("Current section: " + sectionText);
         List<Integer> allMatches = findAllMatches(sectionText, linkText);
         List<Integer>  matchesOutsideBrackets = findMatchesOutsideBrackets(sectionText, linkText);
         return !allMatches.isEmpty() &&
