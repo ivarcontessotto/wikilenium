@@ -15,13 +15,13 @@ public class GameClient {
     private WebDriver driver;
     private String startUrl;
     private int clickLinksLimit;
-    private String expectedWikiPageName;
+    private String goalWikiPageName;
 
     public GameClient(WebDriver driver) {
         this.driver = driver;
         startUrl = null;
         clickLinksLimit = -1;
-        expectedWikiPageName = null;
+        goalWikiPageName = null;
     }
 
     public void close() {
@@ -38,34 +38,34 @@ public class GameClient {
         return this;
     }
 
-    public GameClient untilWikiPageIs(String expectedPageName) {
-        expectedWikiPageName = expectedPageName;
+    public GameClient untilWikiPageIs(String goalWikiPageName) {
+        this.goalWikiPageName = goalWikiPageName;
         return this;
     }
 
     public boolean run() {
-        validateTestSetup();
-        return runTest();
+        validateSetup();
+        return playGame();
     }
 
-    private void validateTestSetup() {
+    private void validateSetup() {
         if (startUrl == null) {
             throw new IllegalStateException("Test start url is not setup properly.");
         }
         if (clickLinksLimit < 0) {
             throw new IllegalStateException("Click links limit is not setup properly.");
         }
-        if (expectedWikiPageName == null) {
-            throw new IllegalStateException("Expected wiki page name is not setup properly.");
+        if (goalWikiPageName == null) {
+            throw new IllegalStateException("Goal wiki page name is not setup properly.");
         }
     }
 
-    private boolean runTest() {
+    private boolean playGame() {
         driver.get(startUrl);
         System.out.println("Start url: " + startUrl);
         clickLinksUntilPageFoundOrLimitReached();
         if (!currentPageHasExpectedName()) {
-            System.out.println(String.format("Expected wiki page to be <%s>' but found <%s>", expectedWikiPageName, getCurrentWikiPageName()));
+            System.out.println(String.format("Expected wiki page to be <%s>' but found <%s>", goalWikiPageName, getCurrentWikiPageName()));
             return false;
         }
         return true;
@@ -86,7 +86,7 @@ public class GameClient {
     }
 
     private boolean currentPageHasExpectedName() {
-        return getCurrentWikiPageName().contentEquals(expectedWikiPageName);
+        return getCurrentWikiPageName().contentEquals(goalWikiPageName);
     }
 
     private String getCurrentWikiPageName() {
@@ -95,40 +95,41 @@ public class GameClient {
 
     private Optional<WebElement> getFirstMatchingLinkInContent() {
         return driver.findElements(By.xpath("//div[@class='mw-parser-output']/p")).stream()
-                .map(this::getFirstMatchingLinkInSection)
+                .map(this::findFirstMatchingLinkInTag)
                 .filter(a -> a != null)
                 .findFirst();
     }
 
-    private WebElement getFirstMatchingLinkInSection(WebElement pTag) {
-        return pTag.findElements(By.xpath("a")).stream()
-                .filter(a -> !a.getText().isEmpty())
-                .filter(a -> linkIsNotInBrackets(pTag.getText(), a.getText()))
+    private WebElement findFirstMatchingLinkInTag(WebElement tag) {
+        return tag.findElements(By.xpath("a | b/a")).stream()
+                .filter(link -> !link.getText().isEmpty())
+                .filter(link -> linkIsNotInBrackets(link.getText(), tag.getText()))
                 .findFirst()
                 .orElse(null);
     }
 
-    private boolean linkIsNotInBrackets(String sectionText, String linkText) {
-        System.out.println("Current link: " + linkText);
-        System.out.println("Current section: " + sectionText);
-        List<Integer> allMatches = findAllMatches(sectionText, linkText);
-        List<Integer>  matchesOutsideBrackets = findMatchesOutsideBrackets(sectionText, linkText);
-        return !allMatches.isEmpty() &&
-                !matchesOutsideBrackets.isEmpty() &&
-                allMatches.get(0).equals(matchesOutsideBrackets.get(0));
+    private boolean linkIsNotInBrackets(String linkText, String parentTagText) {
+        System.out.println("Inspecting link: " + linkText);
+        System.out.println("Current section: " + parentTagText);
+        List<Integer> allOccurrences = findAllOccurrences(linkText, parentTagText);
+        List<Integer>  occurrencesNotInBrackets = findOccurrencesNotInBrackets(linkText, parentTagText);
+        return !allOccurrences.isEmpty() &&
+                !occurrencesNotInBrackets.isEmpty() &&
+                allOccurrences.get(0).equals(occurrencesNotInBrackets.get(0));
     }
 
-    private List<Integer> findAllMatches(String sectionText, String linkText) {
-        return findMatches(sectionText, linkText);
+    private List<Integer> findAllOccurrences(String linkText, String parentTagtext) {
+        return findOccurrences(Pattern.compile(Pattern.quote(linkText)), parentTagtext);
     }
 
-    private List<Integer> findMatchesOutsideBrackets(String sectionText, String linkText) {
-        return findMatches(sectionText, String.format("(?<!\\([^\\)]{0,100})%s(?![^\\(]{0,100}\\))", linkText));
+    private List<Integer> findOccurrencesNotInBrackets(String linkText, String parentTagText) {
+        return findOccurrences(
+                Pattern.compile(String.format("(?<!\\([^\\)]{0,1000})%s(?![^\\(]{0,1000}\\))", Pattern.quote(linkText))),
+                parentTagText);
     }
 
-    private List<Integer> findMatches(String sectionText, String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(sectionText);
+    private List<Integer> findOccurrences(Pattern regexPattern, String parentTagText) {
+        Matcher matcher = regexPattern.matcher(parentTagText);
         List<Integer> occurrences = new LinkedList<>();
         while (matcher.find()) {
             occurrences.add(matcher.start());
