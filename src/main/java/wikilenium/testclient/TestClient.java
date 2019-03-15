@@ -1,23 +1,22 @@
-package gameclient;
+package wikilenium.testclient;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GameClient {
+public class TestClient {
 
     private WebDriver driver;
     private String startUrl;
     private int clickLinksLimit;
     private String goalWikiPageName;
 
-    public GameClient(WebDriver driver) {
+    public TestClient(WebDriver driver) {
         this.driver = driver;
         startUrl = null;
         clickLinksLimit = -1;
@@ -28,24 +27,24 @@ public class GameClient {
         driver.close();
     }
 
-    public GameClient startAtWikiPage(String url) {
+    public TestClient startAtWikiPage(String url) {
         startUrl = url;
         return this;
     }
 
-    public GameClient clickAtMostNLinks(int limit) {
+    public TestClient clickAtMostNLinks(int limit) {
         clickLinksLimit = limit;
         return this;
     }
 
-    public GameClient untilWikiPageIs(String goalWikiPageName) {
+    public TestClient untilWikiPageIs(String goalWikiPageName) {
         this.goalWikiPageName = goalWikiPageName;
         return this;
     }
 
     public boolean run() {
         validateSetup();
-        return playGame();
+        return runTest();
     }
 
     private void validateSetup() {
@@ -60,15 +59,11 @@ public class GameClient {
         }
     }
 
-    private boolean playGame() {
+    private boolean runTest() {
         driver.get(startUrl);
         System.out.println("Start url: " + startUrl);
         clickLinksUntilPageFoundOrLimitReached();
-        if (!currentPageHasExpectedName()) {
-            System.out.println(String.format("Expected wiki page to be <%s>' but found <%s>", goalWikiPageName, getCurrentWikiPageName()));
-            return false;
-        }
-        return true;
+        return currentPageHasExpectedName();
     }
 
     private void clickLinksUntilPageFoundOrLimitReached() {
@@ -96,7 +91,7 @@ public class GameClient {
     private Optional<WebElement> getFirstMatchingLinkInContent() {
         return driver.findElements(By.xpath("//div[@class='mw-parser-output']/p")).stream()
                 .map(this::findFirstMatchingLinkInTag)
-                .filter(a -> a != null)
+                .filter(Objects::nonNull)
                 .findFirst();
     }
 
@@ -109,31 +104,28 @@ public class GameClient {
     }
 
     private boolean linkIsNotInBrackets(String linkText, String parentTagText) {
-        System.out.println("Inspecting link: " + linkText);
-        System.out.println("Current section: " + parentTagText);
-        List<Integer> allOccurrences = findAllOccurrences(linkText, parentTagText);
-        List<Integer>  occurrencesNotInBrackets = findOccurrencesNotInBrackets(linkText, parentTagText);
-        return !allOccurrences.isEmpty() &&
-                !occurrencesNotInBrackets.isEmpty() &&
-                allOccurrences.get(0).equals(occurrencesNotInBrackets.get(0));
+        //System.out.println("Inspecting link: " + linkText);
+        //System.out.println("Current section: " + parentTagText);
+        Optional<Integer> firstMatch = findFirstMatch(linkText, parentTagText);
+        Optional<Integer> firstMatchNotInBrackets = findFirstMatchNotInBrackets(linkText, parentTagText);
+        return firstMatch.isPresent() &&
+                firstMatchNotInBrackets.isPresent() &&
+                firstMatch.get().equals(firstMatchNotInBrackets.get());
     }
 
-    private List<Integer> findAllOccurrences(String linkText, String parentTagtext) {
-        return findOccurrences(Pattern.compile(Pattern.quote(linkText)), parentTagtext);
+    private Optional<Integer> findFirstMatch(String linkText, String parentTagText) {
+        return findFirstMatch(Pattern.compile(Pattern.quote(linkText)), parentTagText);
     }
 
-    private List<Integer> findOccurrencesNotInBrackets(String linkText, String parentTagText) {
-        return findOccurrences(
+    private Optional<Integer> findFirstMatchNotInBrackets(String linkText, String parentTagText) {
+        return findFirstMatch(
                 Pattern.compile(String.format("(?<!\\([^\\)]{0,1000})%s(?![^\\(]{0,1000}\\))", Pattern.quote(linkText))),
                 parentTagText);
     }
 
-    private List<Integer> findOccurrences(Pattern regexPattern, String parentTagText) {
+    private Optional<Integer> findFirstMatch(Pattern regexPattern, String parentTagText) {
         Matcher matcher = regexPattern.matcher(parentTagText);
-        List<Integer> occurrences = new LinkedList<>();
-        while (matcher.find()) {
-            occurrences.add(matcher.start());
-        }
-        return occurrences;
+        if (matcher.find()) return Optional.of(matcher.start());
+        return Optional.empty();
     }
 }
