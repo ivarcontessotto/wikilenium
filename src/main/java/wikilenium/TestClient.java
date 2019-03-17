@@ -1,4 +1,4 @@
-package wikilenium.testclient;
+package wikilenium;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,34 +11,34 @@ import java.util.regex.Pattern;
 
 public class TestClient {
 
-    private WebDriver driver;
-    private String startUrl;
-    private int clickLinksLimit;
-    private String goalWikiPageName;
+    private final WebDriver driver;
+    private String startPageName;
+    private int clickLimit;
+    private String goalPageName;
 
-    public TestClient(WebDriver driver) {
-        this.driver = driver;
-        startUrl = null;
-        clickLinksLimit = -1;
-        goalWikiPageName = null;
+    TestClient(WebDriver webDriver) {
+        driver = webDriver;
+        startPageName = null;
+        clickLimit = -1;
+        goalPageName = null;
     }
 
     public void close() {
         driver.close();
     }
 
-    public TestClient startAtWikiPage(String url) {
-        startUrl = url;
+    public TestClient startPage(String name) {
+        startPageName = name;
         return this;
     }
 
-    public TestClient clickAtMostNLinks(int limit) {
-        clickLinksLimit = limit;
+    public TestClient clickLimit(int n) {
+        clickLimit = n;
         return this;
     }
 
-    public TestClient untilWikiPageIs(String goalWikiPageName) {
-        this.goalWikiPageName = goalWikiPageName;
+    public TestClient goalPage(String name) {
+        goalPageName = name;
         return this;
     }
 
@@ -48,27 +48,27 @@ public class TestClient {
     }
 
     private void validateSetup() {
-        if (startUrl == null) {
-            throw new IllegalStateException("Test start url is not setup properly.");
+        if (startPageName == null) {
+            throw new IllegalStateException("Start page is not setup.");
         }
-        if (clickLinksLimit < 0) {
-            throw new IllegalStateException("Click links limit is not setup properly.");
+        if (clickLimit < 0) {
+            throw new IllegalStateException("Click limit is not setup.");
         }
-        if (goalWikiPageName == null) {
-            throw new IllegalStateException("Goal wiki page name is not setup properly.");
+        if (goalPageName == null) {
+            throw new IllegalStateException("Goal page is not setup.");
         }
     }
 
     private boolean runTest() {
-        driver.get(startUrl);
-        System.out.println("Start url: " + startUrl);
+        driver.get(startPageName);
+        System.out.println("Start page: " + startPageName);
         clickLinksUntilPageFoundOrLimitReached();
-        return currentPageHasExpectedName();
+        return currentPageIsGoal();
     }
 
     private void clickLinksUntilPageFoundOrLimitReached() {
         int i = 0;
-        while (!currentPageHasExpectedName() && i < clickLinksLimit) {
+        while (!currentPageIsGoal() && i < clickLimit) {
             Optional<WebElement> matchingLink = getFirstMatchingLinkInContent();
             if (!matchingLink.isPresent()) {
                 System.out.println("No matching links found on page.");
@@ -80,11 +80,11 @@ public class TestClient {
         }
     }
 
-    private boolean currentPageHasExpectedName() {
-        return getCurrentWikiPageName().contentEquals(goalWikiPageName);
+    private boolean currentPageIsGoal() {
+        return getCurrentPageName().contentEquals(goalPageName);
     }
 
-    private String getCurrentWikiPageName() {
+    private String getCurrentPageName() {
         return this.driver.findElement(By.id("firstHeading")).getText();
     }
 
