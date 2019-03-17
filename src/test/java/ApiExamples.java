@@ -24,6 +24,7 @@ public class ApiExamples {
     @Test
     public void test_StartPageBilanz_ClickLimit7_PageIsPhilosophie() {
         boolean result = client
+                .language("de")
                 .startPage("Bilanz")
                 .clickLimit(7)
                 .goalPage("Philosophie")
@@ -35,6 +36,7 @@ public class ApiExamples {
     @Test
     public void test_StartPageCocaCola_ClickLimit7_PageIsPhilosophie() {
         boolean result = client
+                .language("de")
                 .startPage("Coca-Cola")
                 .clickLimit(7)
                 .goalPage("Philosophie")

@@ -24,6 +24,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageSameAsExpectedPage_ClickLimitZero_ReturnTrue() {
         boolean result = client
+                .language("de")
                 .startPage("Philosophie")
                 .clickLimit(0)
                 .goalPage("Philosophie")
@@ -35,6 +36,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageSameAsExpectedPage_ClickLimitGreaterZero_ReturnTrue() {
         boolean result = client
+                .language("de")
                 .startPage("Philosophie")
                 .clickLimit(2)
                 .goalPage("Philosophie")
@@ -46,6 +48,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageOneHopAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
         boolean result = client
+                .language("de")
                 .startPage("Begriff (Philosophie)")
                 .clickLimit(2)
                 .goalPage("Philosophie")
@@ -57,6 +60,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageTwoHopsAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
         boolean result = client
+                .language("de")
                 .startPage("Wissensgebiet")
                 .clickLimit(2)
                 .goalPage("Philosophie")
@@ -68,6 +72,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageThreeHopsAwayFromExpectedPage_ClickLimitTwo_ReturnFalse() {
         boolean result = client
+                .language("de")
                 .startPage("Fachgebiet")
                 .clickLimit(2)
                 .goalPage("Philosophie")
@@ -79,6 +84,7 @@ public class TestClientTest {
     @Test
     public void test_FirstLinkIsInsideBrackets_ClickFirstLinkOutsideBrackets() {
         boolean result = client
+                .language("de")
                 .startPage("Kredit")
                 .clickLimit(1)
                 .goalPage("Übereignung")
@@ -90,6 +96,7 @@ public class TestClientTest {
     @Test
     public void test_FirstLinkIsInsideBracketsAndHasUnreadableCharacters_ClickFirstLinkOutsideBrackets() {
         boolean result = client
+                .language("de")
                 .startPage("Deutschland")
                 .clickLimit(1)
                 .goalPage("Bundesstaat (Föderaler Staat)")
@@ -100,6 +107,7 @@ public class TestClientTest {
     @Test
     public void test_FirstLinkIsInBoldStyle_ClickBoldStyleLink() {
         boolean result = client
+                .language("de")
                 .startPage("Football League First Division 1903/04")
                 .clickLimit(1)
                 .goalPage("Football League First Division")
@@ -111,6 +119,7 @@ public class TestClientTest {
     @Test
     public void test_LinkInBracketsHasSpecialRegexCharacter_ClickFirstLinkOutsideBrackets() {
         boolean result = client
+                .language("de")
                 .startPage("Idyll")
                 .clickLimit(1)
                 .goalPage("Gattung (Literatur)")
@@ -122,6 +131,7 @@ public class TestClientTest {
     @Test
     public void test_FirstLinkIsItalicStyle_ClickFirstLinkNormalStyle() {
         boolean result = client
+                .language("de")
                 .startPage("Mühl-Schlössl")
                 .clickLimit(1)
                 .goalPage("Lend (Graz)")
@@ -133,6 +143,7 @@ public class TestClientTest {
     @Test
     public void test_ExploratoryTest() {
         boolean result = client
+                .language("de")
                 .startPage("Hermann Heinrich Becker")
                 .clickLimit(1)
                 .goalPage("Politiker")

@@ -12,12 +12,14 @@ import java.util.regex.Pattern;
 public class TestClient {
 
     private final WebDriver driver;
+    private String language;
     private String startPageName;
     private int clickLimit;
     private String goalPageName;
 
     TestClient(WebDriver webDriver) {
         driver = webDriver;
+        language = null;
         startPageName = null;
         clickLimit = -1;
         goalPageName = null;
@@ -25,6 +27,11 @@ public class TestClient {
 
     public void close() {
         driver.close();
+    }
+
+    public TestClient language(String language) {
+        this.language = language;
+        return this;
     }
 
     public TestClient startPage(String name) {
@@ -48,6 +55,9 @@ public class TestClient {
     }
 
     private void validateSetup() {
+        if (language == null) {
+            throw new IllegalStateException("Language is not setup.");
+        }
         if (startPageName == null) {
             throw new IllegalStateException("Start page is not setup.");
         }
@@ -66,7 +76,7 @@ public class TestClient {
     }
 
     private void openStartPage() {
-        String startUrl = "https://de.wikipedia.org/wiki/" + startPageName;
+        String startUrl = "https://" + language + ".wikipedia.org/wiki/" + startPageName;
         driver.get(startUrl);
         System.out.println("Start page: " + startUrl);
     }
