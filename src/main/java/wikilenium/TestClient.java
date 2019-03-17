@@ -60,10 +60,15 @@ public class TestClient {
     }
 
     private boolean runTest() {
-        driver.get(startPageName);
-        System.out.println("Start page: " + startPageName);
+        openStartPage();
         clickLinksUntilPageFoundOrLimitReached();
         return currentPageIsGoal();
+    }
+
+    private void openStartPage() {
+        String startUrl = "https://de.wikipedia.org/wiki/" + startPageName;
+        driver.get(startUrl);
+        System.out.println("Start page: " + startUrl);
     }
 
     private void clickLinksUntilPageFoundOrLimitReached() {

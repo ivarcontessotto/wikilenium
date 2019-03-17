@@ -24,7 +24,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageSameAsExpectedPage_ClickLimitZero_ReturnTrue() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Philosophie")
+                .startPage("Philosophie")
                 .clickLimit(0)
                 .goalPage("Philosophie")
                 .run();
@@ -35,7 +35,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageSameAsExpectedPage_ClickLimitGreaterZero_ReturnTrue() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Philosophie")
+                .startPage("Philosophie")
                 .clickLimit(2)
                 .goalPage("Philosophie")
                 .run();
@@ -46,7 +46,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageOneHopAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Begriff_(Philosophie)")
+                .startPage("Begriff (Philosophie)")
                 .clickLimit(2)
                 .goalPage("Philosophie")
                 .run();
@@ -57,7 +57,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageTwoHopsAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Wissensgebiet")
+                .startPage("Wissensgebiet")
                 .clickLimit(2)
                 .goalPage("Philosophie")
                 .run();
@@ -68,7 +68,7 @@ public class TestClientTest {
     @Test
     public void test_StartPageThreeHopsAwayFromExpectedPage_ClickLimitTwo_ReturnFalse() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Fachgebiet")
+                .startPage("Fachgebiet")
                 .clickLimit(2)
                 .goalPage("Philosophie")
                 .run();
@@ -79,7 +79,7 @@ public class TestClientTest {
     @Test
     public void test_FirstLinkIsInsideBrackets_ClickFirstLinkOutsideBrackets() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Kredit")
+                .startPage("Kredit")
                 .clickLimit(1)
                 .goalPage("Übereignung")
                 .run();
@@ -90,7 +90,7 @@ public class TestClientTest {
     @Test
     public void test_FirstLinkIsInsideBracketsAndHasUnreadableCharacters_ClickFirstLinkOutsideBrackets() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Deutschland")
+                .startPage("Deutschland")
                 .clickLimit(1)
                 .goalPage("Bundesstaat (Föderaler Staat)")
                 .run();
@@ -100,7 +100,7 @@ public class TestClientTest {
     @Test
     public void test_FirstLinkIsInBoldStyle_ClickBoldStyleLink() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Football_League_First_Division_1903/04")
+                .startPage("Football League First Division 1903/04")
                 .clickLimit(1)
                 .goalPage("Football League First Division")
                 .run();
@@ -111,7 +111,7 @@ public class TestClientTest {
     @Test
     public void test_LinkInBracketsHasSpecialRegexCharacter_ClickFirstLinkOutsideBrackets() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Idyll")
+                .startPage("Idyll")
                 .clickLimit(1)
                 .goalPage("Gattung (Literatur)")
                 .run();
@@ -122,7 +122,7 @@ public class TestClientTest {
     @Test
     public void test_FirstLinkIsItalicStyle_ClickFirstLinkNormalStyle() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/M%C3%BChl-Schl%C3%B6ssl")
+                .startPage("Mühl-Schlössl")
                 .clickLimit(1)
                 .goalPage("Lend (Graz)")
                 .run();
@@ -133,7 +133,7 @@ public class TestClientTest {
     @Test
     public void test_ExploratoryTest() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Hermann_Heinrich_Becker")
+                .startPage("Hermann Heinrich Becker")
                 .clickLimit(1)
                 .goalPage("Politiker")
                 .run();

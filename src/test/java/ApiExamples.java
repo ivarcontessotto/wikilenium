@@ -24,7 +24,7 @@ public class ApiExamples {
     @Test
     public void test_StartPageBilanz_ClickLimit7_PageIsPhilosophie() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Bilanz")
+                .startPage("Bilanz")
                 .clickLimit(7)
                 .goalPage("Philosophie")
                 .run();
@@ -35,7 +35,7 @@ public class ApiExamples {
     @Test
     public void test_StartPageCocaCola_ClickLimit7_PageIsPhilosophie() {
         boolean result = client
-                .startPage("https://de.wikipedia.org/wiki/Coca-Cola")
+                .startPage("Coca-Cola")
                 .clickLimit(7)
                 .goalPage("Philosophie")
                 .run();
