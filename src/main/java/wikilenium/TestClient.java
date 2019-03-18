@@ -4,8 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +15,7 @@ public class TestClient {
     private String startPageName;
     private int clickLimit;
     private String goalPageName;
+    private List<String> pathTaken;
 
     TestClient(WebDriver webDriver) {
         driver = webDriver;
@@ -23,6 +23,7 @@ public class TestClient {
         startPageName = null;
         clickLimit = -1;
         goalPageName = null;
+        pathTaken = new LinkedList<>();
     }
 
     public void close() {
@@ -47,6 +48,10 @@ public class TestClient {
     public TestClient goalPage(String name) {
         goalPageName = name;
         return this;
+    }
+
+    String[] getPathTaken() {
+        return pathTaken.toArray(new String[0]);
     }
 
     public boolean run() {
@@ -83,6 +88,7 @@ public class TestClient {
 
     private void clickLinksUntilPageFoundOrLimitReached() {
         int i = 0;
+        pathTaken.add(getCurrentPageName());
         while (!currentPageIsGoal() && i < clickLimit) {
             Optional<WebElement> matchingLink = getFirstMatchingLinkInContent();
             if (!matchingLink.isPresent()) {
@@ -91,6 +97,7 @@ public class TestClient {
             }
             System.out.println(String.format("Clicking link: %s", matchingLink.get().getText()));
             matchingLink.get().click();
+            pathTaken.add(getCurrentPageName());
             i++;
         }
     }

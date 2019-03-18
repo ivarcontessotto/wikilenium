@@ -31,6 +31,7 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(new String[] {"Philosophie"}, client.getPathTaken());
     }
 
     @Test
@@ -43,6 +44,7 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(new String[] {"Philosophie"}, client.getPathTaken());
     }
 
     @Test
@@ -55,6 +57,9 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(
+                new String[] {"Begriff (Philosophie)","Philosophie"},
+                client.getPathTaken());
     }
 
     @Test
@@ -67,6 +72,9 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(
+                new String[] {"Wissensgebiet","Begriff (Philosophie)","Philosophie"},
+                client.getPathTaken());
     }
 
     @Test
@@ -79,6 +87,9 @@ public class TestClientTest {
                 .run();
 
         Assert.assertFalse(result);
+        Assert.assertArrayEquals(
+                new String[] {"Fachgebiet","Wissensgebiet","Begriff (Philosophie)"},
+                client.getPathTaken());
     }
 
     @Test
@@ -91,6 +102,7 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(new String[] {"Kredit","Übereignung"}, client.getPathTaken());
     }
 
     @Test
@@ -103,6 +115,9 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(
+                new String[] {"Deutschland","Bundesstaat (Föderaler Staat)"},
+                client.getPathTaken());
     }
     @Test
     public void test_FirstLinkIsInBoldStyle_ClickBoldStyleLink() {
@@ -114,6 +129,9 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(
+                new String[] {"Football League First Division 1903/04","Football League First Division"},
+                client.getPathTaken());
     }
 
     @Test
@@ -126,6 +144,7 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(new String[] {"Idyll","Gattung (Literatur)"}, client.getPathTaken());
     }
 
     @Test
@@ -138,6 +157,7 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(new String[] {"Mühl-Schlössl","Lend (Graz)"}, client.getPathTaken());
     }
 
     @Test
@@ -150,5 +170,6 @@ public class TestClientTest {
                 .run();
 
         Assert.assertTrue(result);
+        Assert.assertArrayEquals(new String[] {"Hermann Heinrich Becker","Politiker"}, client.getPathTaken());
     }
 }
