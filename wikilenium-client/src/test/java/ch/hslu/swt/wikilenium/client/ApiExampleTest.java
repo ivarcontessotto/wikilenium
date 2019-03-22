@@ -1,3 +1,5 @@
+package ch.hslu.swt.wikilenium.client;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -7,9 +9,6 @@ import org.junit.Test;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
-import wikilenium.LoopException;
-import wikilenium.TestClient;
-import wikilenium.Wikilenium;
 
 public class ApiExampleTest {
 

@@ -1,4 +1,4 @@
-package wikilenium;
+package ch.hslu.swt.wikilenium.client;
 
 /**
  * Exception to be thrown when a loop is detected

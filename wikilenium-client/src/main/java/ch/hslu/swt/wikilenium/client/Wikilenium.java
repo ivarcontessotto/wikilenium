@@ -1,4 +1,4 @@
-package wikilenium;
+package ch.hslu.swt.wikilenium.client;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 

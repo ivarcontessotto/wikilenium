@@ -1,4 +1,4 @@
-package wikilenium;
+package ch.hslu.swt.wikilenium.client;
 
 import org.junit.After;
 import org.junit.Assert;

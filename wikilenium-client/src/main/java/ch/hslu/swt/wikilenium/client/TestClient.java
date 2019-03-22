@@ -1,4 +1,4 @@
-package wikilenium;
+package ch.hslu.swt.wikilenium.client;
 
 import java.util.LinkedList;
 import java.util.List;
