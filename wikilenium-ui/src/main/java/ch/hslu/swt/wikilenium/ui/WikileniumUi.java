@@ -1,10 +1,12 @@
 package ch.hslu.swt.wikilenium.ui;
 
 import java.awt.GridLayout;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -28,9 +30,14 @@ public class WikileniumUi {
 	}
 
 	private void open() {
-		JFrame frame = new JFrame("Wikilenium Desktop Application");
+
+		JFrame frame = new JFrame("Wikilenium Test");
 		GridLayout layout = new GridLayout(0, 2);
 		frame.setLayout(layout);
+
+		URL imgURL = WikileniumUi.class.getClassLoader().getResource("icon.png");
+		ImageIcon icon = new ImageIcon(imgURL);
+		frame.setIconImage(icon.getImage());
 
 		// Add the components
 		JComboBox<Language> languageComboBox = new JComboBox<>(Language.values());
@@ -72,6 +79,7 @@ public class WikileniumUi {
 				} catch (LoopException e) {
 					JOptionPane.showMessageDialog(frame, "A loop has been detected", "Test failed", JOptionPane.ERROR);
 				}
+				testClient.close();
 			} else {
 				JOptionPane.showMessageDialog(frame, validationMessages.stream().collect(Collectors.joining("\n")),
 						"Test failed", JOptionPane.ERROR_MESSAGE);
