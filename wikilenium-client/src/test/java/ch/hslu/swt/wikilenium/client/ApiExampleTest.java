@@ -12,66 +12,66 @@ import io.qameta.allure.SeverityLevel;
 
 public class ApiExampleTest {
 
-	private final Wikilenium wikilenium;
-	private TestClient client;
+    private final Wikilenium wikilenium;
+    private TestClient client;
 
-	public ApiExampleTest() {
-		wikilenium = new Wikilenium();
-	}
+    public ApiExampleTest() {
+        wikilenium = new Wikilenium();
+    }
 
-	@Before
-	public void testSetup() {
-		client = wikilenium.getChromeClient();
-	}
+    @Before
+    public void testSetup() {
+        client = wikilenium.getChromeClient();
+    }
 
-	@After
-	public void testCleanup() {
-		client.close();
-	}
+    @After
+    public void testCleanup() {
+        client.close();
+    }
 
-	@Severity(SeverityLevel.NORMAL)
-	@Description("Start at Page \"Bilanz\" and reach page \"Philosophie\" after 7 steps")
-	@Test
-	public void test_StartPageBilanz_ClickLimit7_PageIsPhilosophie() {
-		boolean result = client.language("de").startPage("Bilanz").clickLimit(7).goalPage("Philosophie").run();
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Start at Page \"Bilanz\" and reach page \"Philosophie\" after 7 steps")
+    @Test
+    public void test_StartPageBilanz_ClickLimit7_PageIsPhilosophie() {
+        boolean result = client.language("de").startPage("Bilanz").clickLimit(7).goalPage("Philosophie").run();
 
-		Assert.assertTrue(result);
-	}
+        Assert.assertTrue(result);
+    }
 
-	@Severity(SeverityLevel.NORMAL)
-	@Description("Start at Page \"Coca-Cola\" and reach page \"Philosophie\" after 7 steps")
-	@Test
-	public void test_StartPageCocaCola_ClickLimit7_PageIsPhilosophie() {
-		boolean result = client.language("de").startPage("Coca-Cola").clickLimit(7).goalPage("Philosophie").run();
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Start at Page \"Coca-Cola\" and reach page \"Philosophie\" after 7 steps")
+    @Test
+    public void test_StartPageCocaCola_ClickLimit7_PageIsPhilosophie() {
+        boolean result = client.language("de").startPage("Coca-Cola").clickLimit(7).goalPage("Philosophie").run();
 
-		Assert.assertTrue(result);
-	}
+        Assert.assertTrue(result);
+    }
 
-	@Severity(SeverityLevel.NORMAL)
-	@Description("Start at Page \"Tee\" and reach page \"Philosophie\" after 7 steps")
-	@Test
-	public void test_Tee_ClickLimit7_PageIsPhilosophie() {
-		boolean result = client.language("de").startPage("Tee").clickLimit(7).goalPage("Philosophie").run();
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Start at Page \"Tee\" and reach page \"Philosophie\" after 7 steps")
+    @Test
+    public void test_Tee_ClickLimit7_PageIsPhilosophie() {
+        boolean result = client.language("de").startPage("Tee").clickLimit(7).goalPage("Philosophie").run();
 
-		Assert.assertTrue(result);
-	}
+        Assert.assertTrue(result);
+    }
 
-	@Severity(SeverityLevel.NORMAL)
-	@Description("Start at Page \"Coca-Cola\" and reach page \"Philosophie\" after 7 steps")
-	@Test(expected = LoopException.class)
-	public void test_StartPageCocaCola_ClickLimit7_ExpectLoopException() {
-		boolean result = client.language("de").startPage("Coca-Cola").clickLimit(7).goalPage("Philosophie").run();
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Start at Page \"Coca-Cola\" and reach page \"Philosophie\" after 7 steps")
+    @Test(expected = LoopException.class)
+    public void test_StartPageCocaCola_ClickLimit7_ExpectLoopException() {
+        boolean result = client.language("de").startPage("Coca-Cola").clickLimit(7).goalPage("Philosophie").run();
 
-		Assert.assertTrue(result);
-	}
+        Assert.assertTrue(result);
+    }
 
-	@Ignore
-	@Severity(SeverityLevel.TRIVIAL)
-	@Description("Start at Page \"Softwaretest\" and reach page \"Philosophie\" after 7 steps")
-	@Test(expected = LoopException.class)
-	public void test_StartSoftwaretest_ClickLimit7_PageIsPhilosophie() {
-		boolean result = client.language("de").startPage("Softwaretest").clickLimit(7).goalPage("Philosophie").run();
+    @Ignore
+    @Severity(SeverityLevel.TRIVIAL)
+    @Description("Start at Page \"Softwaretest\" and reach page \"Philosophie\" after 7 steps")
+    @Test(expected = LoopException.class)
+    public void test_StartSoftwaretest_ClickLimit7_PageIsPhilosophie() {
+        boolean result = client.language("de").startPage("Softwaretest").clickLimit(7).goalPage("Philosophie").run();
 
-		Assert.assertTrue(result);
-	}
+        Assert.assertTrue(result);
+    }
 }
