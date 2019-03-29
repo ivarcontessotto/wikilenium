@@ -111,7 +111,8 @@ public class TestClient {
             System.out.println(String.format("Clicking link: %s", matchingLink.get().getText()));
             matchingLink.get().click();
             if (pathTaken.contains(getCurrentPageName())) {
-                throw new LoopException(startPageName);
+                System.out.println("Loop in path detected.");
+                break;
             }
             pathTaken.add(getCurrentPageName());
             i++;

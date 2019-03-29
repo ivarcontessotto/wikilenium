@@ -17,7 +17,6 @@ import javax.swing.JWindow;
 
 import com.google.common.base.Strings;
 
-import ch.hslu.swt.wikilenium.client.LoopException;
 import ch.hslu.swt.wikilenium.client.TestClient;
 import ch.hslu.swt.wikilenium.client.Wikilenium;
 import ch.hslu.swt.wikilenium.ui.model.Language;
@@ -66,18 +65,14 @@ public class WikileniumUi {
             List<String> validationMessages = validateInput(selectedLanguage, startPage, endPage, maximumNumber);
             if (validationMessages.isEmpty()) {
                 TestClient testClient = new Wikilenium().getChromeClient();
-                try {
-                    if (testClient.language(selectedLanguage.getId()).startPage(startPage).goalPage(endPage)
-                            .clickLimit(Integer.parseInt(maximumNumber)).run()) {
-                        JOptionPane.showMessageDialog(frame, "Congratulations! The goal page was reached",
-                                "Test failed", JOptionPane.INFORMATION_MESSAGE);
-                        ;
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "The goal page was not reached", "Test failed",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (LoopException e) {
-                    JOptionPane.showMessageDialog(frame, "A loop has been detected", "Test failed", JOptionPane.ERROR);
+                if (testClient.language(selectedLanguage.getId()).startPage(startPage).goalPage(endPage)
+                        .clickLimit(Integer.parseInt(maximumNumber)).run()) {
+                    JOptionPane.showMessageDialog(frame, "Congratulations! The goal page was reached",
+                            "Test failed", JOptionPane.INFORMATION_MESSAGE);
+                    ;
+                } else {
+                    JOptionPane.showMessageDialog(frame, "The goal page was not reached", "Test failed",
+                            JOptionPane.ERROR_MESSAGE);
                 }
                 testClient.close();
             } else {

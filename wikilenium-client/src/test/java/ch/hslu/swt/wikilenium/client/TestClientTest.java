@@ -140,6 +140,16 @@ public class TestClientTest {
     }
 
     @Severity(SeverityLevel.CRITICAL)
+    @Description("Make sure loop in path is detected and LoopException is thrown")
+    @Test
+    public void test_PathContainsLoop_DetectLoopEarlyAndReturnFalse() {
+        boolean result = client.language("de").startPage("Coca-Cola").clickLimit(100).goalPage("Philosophie").run();
+
+        Assert.assertFalse(result);
+        Assert.assertArrayEquals(new String[] { "Coca-Cola", "Marke (Marketing)", "Marketing", "Absatzwirtschaft" }, client.getPathTaken());
+    }
+
+    @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Politiker\" is reached from \"Hermann Heinrich Becker\" after 1 step")
     @Test
     public void test_ExploratoryTest() {
