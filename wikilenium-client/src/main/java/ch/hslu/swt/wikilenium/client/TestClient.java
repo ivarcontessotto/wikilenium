@@ -129,12 +129,16 @@ public class TestClient {
 
     private Optional<WebElement> getFirstMatchingLinkInContent() {
         return driver.findElements(By.xpath("//div[@class='mw-parser-output']/p")).stream()
-                .map(this::findFirstMatchingLinkInTag).filter(Objects::nonNull).findFirst();
+                .map(this::findFirstMatchingLinkInTag)
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 
     private WebElement findFirstMatchingLinkInTag(WebElement tag) {
-        return tag.findElements(By.xpath("a | b/a")).stream().filter(link -> !link.getText().isEmpty())
-                .filter(link -> linkIsNotInBrackets(link.getText(), tag.getText())).findFirst().orElse(null);
+        return tag.findElements(By.xpath("a | b/a")).stream()
+                .filter(link -> !link.getText().isEmpty())
+                .filter(link -> linkIsNotInBrackets(link.getText(), tag.getText()))
+                .findFirst().orElse(null);
     }
 
     private boolean linkIsNotInBrackets(String linkText, String parentTagText) {
@@ -142,8 +146,9 @@ public class TestClient {
         // System.out.println("Current section: " + parentTagText);
         Optional<Integer> firstMatch = findFirstMatch(linkText, parentTagText);
         Optional<Integer> firstMatchNotInBrackets = findFirstMatchNotInBrackets(linkText, parentTagText);
-        return firstMatch.isPresent() && firstMatchNotInBrackets.isPresent()
-                && firstMatch.get().equals(firstMatchNotInBrackets.get());
+        return firstMatch.isPresent() &&
+                firstMatchNotInBrackets.isPresent() &&
+                firstMatch.get().equals(firstMatchNotInBrackets.get());
     }
 
     private Optional<Integer> findFirstMatch(String linkText, String parentTagText) {
@@ -154,7 +159,7 @@ public class TestClient {
         return findFirstMatch(
                 Pattern.compile(
                         String.format("(?<!\\([^\\)]{0,1000})%s(?![^\\(]{0,1000}\\))", Pattern.quote(linkText))),
-                parentTagText);
+                        parentTagText);
     }
 
     private Optional<Integer> findFirstMatch(Pattern regexPattern, String parentTagText) {

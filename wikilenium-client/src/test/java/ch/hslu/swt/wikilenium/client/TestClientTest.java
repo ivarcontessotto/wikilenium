@@ -34,7 +34,12 @@ public class TestClientTest {
     @Story("Test create account test1")
     @Test
     public void test_StartPageSameAsExpectedPage_ClickLimitZero_ReturnTrue() {
-        boolean result = client.language("de").startPage("Philosophie").clickLimit(0).goalPage("Philosophie").run();
+        boolean result = client
+                .language("de")
+                .startPage("Philosophie")
+                .clickLimit(0)
+                .goalPage("Philosophie")
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Philosophie" }, client.getPathTaken());
@@ -45,7 +50,12 @@ public class TestClientTest {
     @Story("Test create account test1")
     @Test
     public void test_StartPageSameAsExpectedPage_ClickLimitGreaterZero_ReturnTrue() {
-        boolean result = client.language("de").startPage("Philosophie").clickLimit(2).goalPage("Philosophie").run();
+        boolean result = client
+                .language("de")
+                .startPage("Philosophie")
+                .clickLimit(2)
+                .goalPage("Philosophie")
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Philosophie" }, client.getPathTaken());
@@ -55,7 +65,11 @@ public class TestClientTest {
     @Description("Make sure \"Philosophie\" is reached from \"Begriff (Philosophie)\" after 2 steps")
     @Test
     public void test_StartPageOneHopAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
-        boolean result = client.language("de").startPage("Begriff (Philosophie)").clickLimit(2).goalPage("Philosophie")
+        boolean result = client
+                .language("de")
+                .startPage("Begriff (Philosophie)")
+                .clickLimit(2)
+                .goalPage("Philosophie")
                 .run();
 
         Assert.assertTrue(result);
@@ -66,10 +80,16 @@ public class TestClientTest {
     @Description("Make sure \"Philosophie\" is reached from \"Wissensgebiet\" after 2 steps")
     @Test
     public void test_StartPageTwoHopsAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
-        boolean result = client.language("de").startPage("Wissensgebiet").clickLimit(2).goalPage("Philosophie").run();
+        boolean result = client
+                .language("de")
+                .startPage("Wissensgebiet")
+                .clickLimit(2)
+                .goalPage("Philosophie")
+                .run();
 
         Assert.assertTrue(result);
-        Assert.assertArrayEquals(new String[] { "Wissensgebiet", "Begriff (Philosophie)", "Philosophie" },
+        Assert.assertArrayEquals(
+                new String[] { "Wissensgebiet", "Begriff (Philosophie)", "Philosophie" },
                 client.getPathTaken());
     }
 
@@ -77,10 +97,16 @@ public class TestClientTest {
     @Description("Make sure \"Philosophie\" is reached from \"Fachgebiet\" after 2 steps")
     @Test
     public void test_StartPageThreeHopsAwayFromExpectedPage_ClickLimitTwo_ReturnFalse() {
-        boolean result = client.language("de").startPage("Fachgebiet").clickLimit(2).goalPage("Philosophie").run();
+        boolean result = client
+                .language("de")
+                .startPage("Fachgebiet")
+                .clickLimit(2)
+                .goalPage("Philosophie")
+                .run();
 
         Assert.assertFalse(result);
-        Assert.assertArrayEquals(new String[] { "Fachgebiet", "Wissensgebiet", "Begriff (Philosophie)" },
+        Assert.assertArrayEquals(
+                new String[] { "Fachgebiet", "Wissensgebiet", "Begriff (Philosophie)" },
                 client.getPathTaken());
     }
 
@@ -88,7 +114,12 @@ public class TestClientTest {
     @Description("Make sure \"Übereignung\" is reached from \"Kredit\" after 1 step")
     @Test
     public void test_FirstLinkIsInsideBrackets_ClickFirstLinkOutsideBrackets() {
-        boolean result = client.language("de").startPage("Kredit").clickLimit(1).goalPage("Übereignung").run();
+        boolean result = client
+                .language("de")
+                .startPage("Kredit")
+                .clickLimit(1)
+                .goalPage("Übereignung")
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Kredit", "Übereignung" }, client.getPathTaken());
@@ -98,11 +129,16 @@ public class TestClientTest {
     @Description("Make sure \"Bundesstaat (Föderaler Staat)\" is reached from \"Deutschland\" after 1 step")
     @Test
     public void test_FirstLinkIsInsideBracketsAndHasUnreadableCharacters_ClickFirstLinkOutsideBrackets() {
-        boolean result = client.language("de").startPage("Deutschland").clickLimit(1)
-                .goalPage("Bundesstaat (Föderaler Staat)").run();
+        boolean result = client
+                .language("de")
+                .startPage("Deutschland")
+                .clickLimit(1)
+                .goalPage("Bundesstaat (Föderaler Staat)")
+                .run();
 
         Assert.assertTrue(result);
-        Assert.assertArrayEquals(new String[] { "Deutschland", "Bundesstaat (Föderaler Staat)" },
+        Assert.assertArrayEquals(
+                new String[] { "Deutschland", "Bundesstaat (Föderaler Staat)" },
                 client.getPathTaken());
     }
 
@@ -110,8 +146,12 @@ public class TestClientTest {
     @Description("Make sure \"Football League First Division\" is reached from \"Football League First Division 1903/04\" after 1 step")
     @Test
     public void test_FirstLinkIsInBoldStyle_ClickBoldStyleLink() {
-        boolean result = client.language("de").startPage("Football League First Division 1903/04").clickLimit(1)
-                .goalPage("Football League First Division").run();
+        boolean result = client
+                .language("de")
+                .startPage("Football League First Division 1903/04")
+                .clickLimit(1)
+                .goalPage("Football League First Division")
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(
@@ -123,7 +163,12 @@ public class TestClientTest {
     @Description("Make sure \"Gattung (Literatur)\" is reached from \"Idyll\" after 1 step")
     @Test
     public void test_LinkInBracketsHasSpecialRegexCharacter_ClickFirstLinkOutsideBrackets() {
-        boolean result = client.language("de").startPage("Idyll").clickLimit(1).goalPage("Gattung (Literatur)").run();
+        boolean result = client
+                .language("de")
+                .startPage("Idyll")
+                .clickLimit(1)
+                .goalPage("Gattung (Literatur)")
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Idyll", "Gattung (Literatur)" }, client.getPathTaken());
@@ -133,7 +178,12 @@ public class TestClientTest {
     @Description("Make sure \"Lend (Graz)\" is reached from \"Mühl-Schlössl\" after 1 step")
     @Test
     public void test_FirstLinkIsItalicStyle_ClickFirstLinkNormalStyle() {
-        boolean result = client.language("de").startPage("Mühl-Schlössl").clickLimit(1).goalPage("Lend (Graz)").run();
+        boolean result = client
+                .language("de")
+                .startPage("Mühl-Schlössl")
+                .clickLimit(1)
+                .goalPage("Lend (Graz)")
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Mühl-Schlössl", "Lend (Graz)" }, client.getPathTaken());
@@ -143,17 +193,28 @@ public class TestClientTest {
     @Description("Make sure loop in path is detected and LoopException is thrown")
     @Test
     public void test_PathContainsLoop_DetectLoopEarlyAndReturnFalse() {
-        boolean result = client.language("de").startPage("Coca-Cola").clickLimit(100).goalPage("Philosophie").run();
+        boolean result = client
+                .language("de")
+                .startPage("Coca-Cola")
+                .clickLimit(100)
+                .goalPage("Philosophie")
+                .run();
 
         Assert.assertFalse(result);
-        Assert.assertArrayEquals(new String[] { "Coca-Cola", "Marke (Marketing)", "Marketing", "Absatzwirtschaft" }, client.getPathTaken());
+        Assert.assertArrayEquals(
+                new String[] { "Coca-Cola", "Marke (Marketing)", "Marketing", "Absatzwirtschaft" },
+                client.getPathTaken());
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Politiker\" is reached from \"Hermann Heinrich Becker\" after 1 step")
     @Test
     public void test_ExploratoryTest() {
-        boolean result = client.language("de").startPage("Hermann Heinrich Becker").clickLimit(1).goalPage("Politiker")
+        boolean result = client
+                .language("de")
+                .startPage("Hermann Heinrich Becker")
+                .clickLimit(1)
+                .goalPage("Politiker")
                 .run();
 
         Assert.assertTrue(result);
