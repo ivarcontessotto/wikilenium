@@ -101,8 +101,8 @@ public class TestClient {
     }
 
     private void clickLinksUntilPageFoundOrLimitReached() {
-        int i = 0;
         pathTaken.add(getCurrentPageName());
+        int i = 0;
         while (!currentPageIsGoal() && i < clickLimit) {
             Optional<WebElement> matchingLink = getFirstMatchingLinkInContent();
             if (!matchingLink.isPresent()) {
@@ -111,11 +111,13 @@ public class TestClient {
             }
             System.out.println(String.format("Clicking link: %s", matchingLink.get().getText()));
             matchingLink.get().click();
-            if (pathTaken.contains(getCurrentPageName())) {
+            String currentPageName = getCurrentPageName();
+            if (pathTaken.contains(currentPageName)) {
+                pathTaken.add(currentPageName);
                 System.out.println("Loop in path detected.");
                 break;
             }
-            pathTaken.add(getCurrentPageName());
+            pathTaken.add(currentPageName);
             i++;
         }
     }

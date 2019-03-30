@@ -8,7 +8,6 @@ import org.junit.Test;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
-import io.qameta.allure.Story;
 
 public class TestClientTest {
 
@@ -277,7 +276,7 @@ public class TestClientTest {
 
         Assert.assertFalse(result);
         Assert.assertArrayEquals(
-                new String[] { "Coca-Cola", "Marke (Marketing)", "Marketing", "Absatzwirtschaft" },
+                new String[] { "Coca-Cola", "Marke (Marketing)", "Marketing", "Absatzwirtschaft", "Marketing" },
                 client.getPathTaken());
     }
 
