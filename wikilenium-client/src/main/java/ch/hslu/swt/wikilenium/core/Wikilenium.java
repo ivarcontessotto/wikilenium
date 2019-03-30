@@ -1,8 +1,4 @@
-package ch.hslu.swt.wikilenium.client;
-
-import org.openqa.selenium.chrome.ChromeDriver;
-
-import io.qameta.allure.Step;
+package ch.hslu.swt.wikilenium.core;
 
 public class Wikilenium {
 
@@ -13,12 +9,7 @@ public class Wikilenium {
         System.setProperty(CHROMEDRIVER_PROPERTY_NAME, PATH_TO_CHROMEDRIVER);
     }
 
-    @Step("Setup ChromeDriver")
-    public TestClient getChromeClient() {
-        return new TestClient(new ChromeDriver());
-    }
-
-    public TestClient getFirefoxClient() {
-        return null;
+    public TestRunner getTestRunner() {
+        return new TestRunner(new WebDriverFactory());
     }
 }

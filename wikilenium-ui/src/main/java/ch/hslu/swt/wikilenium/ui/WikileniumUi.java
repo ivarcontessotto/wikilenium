@@ -17,8 +17,8 @@ import javax.swing.JWindow;
 
 import com.google.common.base.Strings;
 
-import ch.hslu.swt.wikilenium.client.TestClient;
-import ch.hslu.swt.wikilenium.client.Wikilenium;
+import ch.hslu.swt.wikilenium.core.TestRunner;
+import ch.hslu.swt.wikilenium.core.Wikilenium;
 import ch.hslu.swt.wikilenium.ui.model.Language;
 
 public class WikileniumUi {
@@ -64,16 +64,15 @@ public class WikileniumUi {
 
             List<String> validationMessages = validateInput(selectedLanguage, startPage, endPage, maximumNumber);
             if (validationMessages.isEmpty()) {
-                TestClient testClient = new Wikilenium().getChromeClient();
-                if (testClient.language(selectedLanguage.getId()).startPage(startPage).goalPage(endPage)
-                        .clickLimit(Integer.parseInt(maximumNumber)).run()) {
+                TestRunner testRunner = new Wikilenium().getTestRunner();
+                if (testRunner.language(selectedLanguage.getId()).startPage(startPage).goalPage(endPage)
+                        .clickLimit(Integer.parseInt(maximumNumber)).runInChrome()) {
                     JOptionPane.showMessageDialog(frame, "Congratulations! The goal page was reached",
                             "Test failed", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(frame, "The goal page was not reached", "Test failed",
                             JOptionPane.ERROR_MESSAGE);
                 }
-                testClient.close();
             } else {
                 JOptionPane.showMessageDialog(frame, validationMessages.stream().collect(Collectors.joining("\n")),
                         "Test failed", JOptionPane.ERROR_MESSAGE);

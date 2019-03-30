@@ -1,4 +1,4 @@
-package ch.hslu.swt.wikilenium.client;
+package ch.hslu.swt.wikilenium.core;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,18 +14,19 @@ import com.google.common.base.Strings;
 
 import io.qameta.allure.Step;
 
-public class TestClient {
+public class TestRunner {
 
-    private final WebDriver driver;
-
+    private final WebDriverFactory driverFactory;
+    private WebDriver driver;
     private String language;
     private String startPageName;
     private int clickLimit;
     private String goalPageName;
     private List<String> pathTaken;
 
-    TestClient(WebDriver webDriver) {
-        driver = webDriver;
+    TestRunner(WebDriverFactory webDriverFactory) {
+        driverFactory = webDriverFactory;
+        driver = null;
         language = null;
         startPageName = null;
         clickLimit = -1;
@@ -33,42 +34,39 @@ public class TestClient {
         pathTaken = new LinkedList<>();
     }
 
-    @Step("Close browser")
-    public void close() {
-        driver.close();
-    }
-
     @Step("Set language to {0}")
-    public TestClient language(String language) {
+    public TestRunner language(String language) {
         this.language = language;
         return this;
     }
 
     @Step("Set start page to {0}")
-    public TestClient startPage(String name) {
+    public TestRunner startPage(String name) {
         startPageName = name;
         return this;
     }
 
     @Step("Set maximum number of steps to {0}")
-    public TestClient clickLimit(int n) {
+    public TestRunner clickLimit(int n) {
         clickLimit = n;
         return this;
     }
 
     @Step("Set end page to {0}")
-    public TestClient goalPage(String name) {
+    public TestRunner goalPage(String name) {
         goalPageName = name;
         return this;
     }
 
-    @Step("Start clicking through Wikipedia")
-    public boolean run() {
-        validateSetup();
-        return runTest();
+    public boolean runInChrome() {
+        return run(driverFactory::getChromeDriver);
     }
 
-    public int getClickCount() {
+    public boolean runInFirefox() {
+        return run(driverFactory::getFirefoxDriver);
+    }
+
+    int getClickCount() {
         return pathTaken.size() - 1;
     }
 
@@ -76,6 +74,15 @@ public class TestClient {
         return pathTaken.toArray(new String[0]);
     }
 
+    private boolean run(FactoryFunc factory) {
+        validateSetup();
+        driver = factory.getDriver();
+        boolean result = runTest();
+        closeDriver();
+        return result;
+    }
+
+    @Step("Validate test input")
     private void validateSetup() {
         if (Strings.isNullOrEmpty(language)) {
             throw new IllegalStateException("Language is not setup.");
@@ -92,13 +99,13 @@ public class TestClient {
     }
 
     private boolean runTest() {
-        openStartPage();
+        goToStartPage();
         clickLinksUntilPageFoundOrLimitReached();
         return currentPageIsGoal();
     }
 
-    @Step("Open start page")
-    private void openStartPage() {
+    @Step("Go to start page")
+    private void goToStartPage() {
         String startUrl = "https://" + language + ".wikipedia.org/wiki/" + startPageName;
         driver.get(startUrl);
         System.out.println("Start page: " + startUrl);
@@ -174,5 +181,14 @@ public class TestClient {
         if (matcher.find())
             return Optional.of(matcher.start());
         return Optional.empty();
+    }
+
+    @Step("Close browser")
+    private void closeDriver() {
+        driver.close();
+    }
+
+    private interface FactoryFunc {
+        WebDriver getDriver();
     }
 }
