@@ -69,7 +69,6 @@ public class WikileniumUi {
                         .clickLimit(Integer.parseInt(maximumNumber)).run()) {
                     JOptionPane.showMessageDialog(frame, "Congratulations! The goal page was reached",
                             "Test failed", JOptionPane.INFORMATION_MESSAGE);
-                    ;
                 } else {
                     JOptionPane.showMessageDialog(frame, "The goal page was not reached", "Test failed",
                             JOptionPane.ERROR_MESSAGE);

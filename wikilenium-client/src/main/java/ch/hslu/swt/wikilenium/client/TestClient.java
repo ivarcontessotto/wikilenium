@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.google.common.base.Strings;
 
 import io.qameta.allure.Step;
 
@@ -72,16 +73,16 @@ public class TestClient {
     }
 
     private void validateSetup() {
-        if (language == null) {
+        if (Strings.isNullOrEmpty(language)) {
             throw new IllegalStateException("Language is not setup.");
         }
-        if (startPageName == null) {
+        if (Strings.isNullOrEmpty(startPageName)) {
             throw new IllegalStateException("Start page is not setup.");
         }
         if (clickLimit < 0) {
             throw new IllegalStateException("Click limit is not setup.");
         }
-        if (goalPageName == null) {
+        if (Strings.isNullOrEmpty(goalPageName)) {
             throw new IllegalStateException("Goal page is not setup.");
         }
     }
