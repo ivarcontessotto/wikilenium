@@ -118,6 +118,7 @@ public class TestClientTest {
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Philosophie" }, client.getPathTaken());
+        Assert.assertEquals(0, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -133,6 +134,7 @@ public class TestClientTest {
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Philosophie" }, client.getPathTaken());
+        Assert.assertEquals(0, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -148,6 +150,7 @@ public class TestClientTest {
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Begriff (Philosophie)", "Philosophie" }, client.getPathTaken());
+        Assert.assertEquals(1, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -165,6 +168,7 @@ public class TestClientTest {
         Assert.assertArrayEquals(
                 new String[] { "Wissensgebiet", "Begriff (Philosophie)", "Philosophie" },
                 client.getPathTaken());
+        Assert.assertEquals(2, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -182,6 +186,7 @@ public class TestClientTest {
         Assert.assertArrayEquals(
                 new String[] { "Fachgebiet", "Wissensgebiet", "Begriff (Philosophie)" },
                 client.getPathTaken());
+        Assert.assertEquals(2, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -197,6 +202,7 @@ public class TestClientTest {
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Kredit", "Übereignung" }, client.getPathTaken());
+        Assert.assertEquals(1, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -214,6 +220,7 @@ public class TestClientTest {
         Assert.assertArrayEquals(
                 new String[] { "Deutschland", "Bundesstaat (Föderaler Staat)" },
                 client.getPathTaken());
+        Assert.assertEquals(1, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -231,6 +238,7 @@ public class TestClientTest {
         Assert.assertArrayEquals(
                 new String[] { "Football League First Division 1903/04", "Football League First Division" },
                 client.getPathTaken());
+        Assert.assertEquals(1, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -246,6 +254,7 @@ public class TestClientTest {
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Idyll", "Gattung (Literatur)" }, client.getPathTaken());
+        Assert.assertEquals(1, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -261,6 +270,7 @@ public class TestClientTest {
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Mühl-Schlössl", "Lend (Graz)" }, client.getPathTaken());
+        Assert.assertEquals(1, client.getClickCount());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -278,20 +288,6 @@ public class TestClientTest {
         Assert.assertArrayEquals(
                 new String[] { "Coca-Cola", "Marke (Marketing)", "Marketing", "Absatzwirtschaft", "Marketing" },
                 client.getPathTaken());
-    }
-
-    @Severity(SeverityLevel.CRITICAL)
-    @Description("Make sure \"Politiker\" is reached from \"Hermann Heinrich Becker\" after 1 step")
-    @Test
-    public void test_ExploratoryTest() {
-        boolean result = client
-                .language("de")
-                .startPage("Hermann Heinrich Becker")
-                .clickLimit(1)
-                .goalPage("Politiker")
-                .run();
-
-        Assert.assertTrue(result);
-        Assert.assertArrayEquals(new String[] { "Hermann Heinrich Becker", "Politiker" }, client.getPathTaken());
+        Assert.assertEquals(4, client.getClickCount());
     }
 }

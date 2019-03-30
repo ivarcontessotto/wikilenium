@@ -62,14 +62,18 @@ public class TestClient {
         return this;
     }
 
-    String[] getPathTaken() {
-        return pathTaken.toArray(new String[0]);
-    }
-
     @Step("Start clicking through Wikipedia")
     public boolean run() {
         validateSetup();
         return runTest();
+    }
+
+    public int getClickCount() {
+        return pathTaken.size() - 1;
+    }
+
+    String[] getPathTaken() {
+        return pathTaken.toArray(new String[0]);
     }
 
     private void validateSetup() {
