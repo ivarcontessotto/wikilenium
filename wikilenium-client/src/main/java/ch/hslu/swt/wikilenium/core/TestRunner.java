@@ -58,20 +58,12 @@ public class TestRunner {
         return this;
     }
 
-    int getClickCount() {
-        return pathTaken.size() - 1;
-    }
-
-    String[] getPathTaken() {
-        return pathTaken.toArray(new String[0]);
-    }
-
-    public boolean run() {
+    public TestResult run() {
         validateSetup();
         driver = driverFactory.getWebDriver();
-        boolean result = runTest();
+        boolean isPassed = runTest();
         closeDriver();
-        return result;
+        return new TestResult(isPassed, pathTaken.size() - 1, pathTaken.toArray(new String[0]));
     }
 
     @Step("Validate test input")

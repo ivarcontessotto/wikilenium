@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JWindow;
 
+import ch.hslu.swt.wikilenium.core.TestResult;
 import com.google.common.base.Strings;
 
 import ch.hslu.swt.wikilenium.core.TestRunner;
@@ -65,10 +66,11 @@ public class WikileniumUi {
             List<String> validationMessages = validateInput(selectedLanguage, startPage, endPage, maximumNumber);
             if (validationMessages.isEmpty()) {
                 TestRunner testRunner = new Wikilenium().getChromeTestRunner();
-                if (testRunner.language(selectedLanguage.getId()).startPage(startPage).goalPage(endPage)
-                        .clickLimit(Integer.parseInt(maximumNumber)).run()) {
+                TestResult result = testRunner.language(selectedLanguage.getId()).startPage(startPage).goalPage(endPage)
+                        .clickLimit(Integer.parseInt(maximumNumber)).run();
+                if (result.isPassed()) {
                     JOptionPane.showMessageDialog(frame, "Congratulations! The goal page was reached",
-                            "Test failed", JOptionPane.INFORMATION_MESSAGE);
+                            "Test passed", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(frame, "The goal page was not reached", "Test failed",
                             JOptionPane.ERROR_MESSAGE);
