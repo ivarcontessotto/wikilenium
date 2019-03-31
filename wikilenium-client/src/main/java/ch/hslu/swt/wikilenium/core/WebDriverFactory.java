@@ -5,6 +5,6 @@ import org.openqa.selenium.WebDriver;
 
 public interface WebDriverFactory {
 
-    @Step("Open web browser")
+    @Step("Open web browser {0}")
     WebDriver getWebDriver();
 }

@@ -52,7 +52,7 @@ public class TestRunner {
         return this;
     }
 
-    @Step("Set end page to {0}")
+    @Step("Set goal page to {0}")
     public TestRunner goalPage(String name) {
         goalPageName = name;
         return this;

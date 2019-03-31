@@ -8,25 +8,25 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 
-public class IntegrationTest {
+public class TestRunnerIntegrationTest {
 
     private final Wikilenium wikilenium;
-    private TestRunner test;
+    private TestRunner testRunner;
 
-    public IntegrationTest() {
+    public TestRunnerIntegrationTest() {
         wikilenium = new Wikilenium();
     }
 
     @Before
     public void testSetup() {
-        test = wikilenium.getChromeTestRunner();
+        testRunner = wikilenium.getTestRunner(Wikilenium.Browser.CHROME);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure language cannot be null")
     @Test(expected = IllegalStateException.class)
-    public void test_LanguageIsNull_ThrowException() {
-        test.language(null)
+    public void test_TestRunner_LanguageIsNull_ThrowException() {
+        testRunner.language(null)
                 .startPage("Something")
                 .clickLimit(0)
                 .goalPage("Something")
@@ -36,8 +36,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure language cannot be empty")
     @Test(expected = IllegalStateException.class)
-    public void test_LanguageIsEmpty_ThrowException() {
-        test.language("")
+    public void test_TestRunner_LanguageIsEmpty_ThrowException() {
+        testRunner.language("")
                 .startPage("Something")
                 .clickLimit(0)
                 .goalPage("Something")
@@ -47,8 +47,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure start page cannot be null")
     @Test(expected = IllegalStateException.class)
-    public void test_StartPageIsNull_ThrowException() {
-        test.language("de")
+    public void test_TestRunner_StartPageIsNull_ThrowException() {
+        testRunner.language("de")
                 .startPage(null)
                 .clickLimit(0)
                 .goalPage("Something")
@@ -58,8 +58,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure start page cannot be empty")
     @Test(expected = IllegalStateException.class)
-    public void test_StartPageIsEmpty_ThrowException() {
-        test.language("de")
+    public void test_TestRunner_StartPageIsEmpty_ThrowException() {
+        testRunner.language("de")
                 .startPage("")
                 .clickLimit(0)
                 .goalPage("Something")
@@ -69,8 +69,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure click limit cannot be less than zero")
     @Test(expected = IllegalStateException.class)
-    public void test_ClickLimitIsLessThanZero_ThrowException() {
-        test.language("de")
+    public void test_TestRunner_ClickLimitIsLessThanZero_ThrowException() {
+        testRunner.language("de")
                 .startPage("Something")
                 .clickLimit(-1)
                 .goalPage("Something")
@@ -80,8 +80,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure goal page cannot be null")
     @Test(expected = IllegalStateException.class)
-    public void test_GoalPageIsNull_ThrowException() {
-        test.language("de")
+    public void test_TestRunner_GoalPageIsNull_ThrowException() {
+        testRunner.language("de")
                 .startPage("Something")
                 .clickLimit(0)
                 .goalPage(null)
@@ -91,8 +91,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure goal page cannot be empty")
     @Test(expected = IllegalStateException.class)
-    public void test_GoalPageIsEmpty_ThrowException() {
-        test.language("de")
+    public void test_TestRunner_GoalPageIsEmpty_ThrowException() {
+        testRunner.language("de")
                 .startPage("Something")
                 .clickLimit(0)
                 .goalPage("")
@@ -102,8 +102,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure no clicks are needed to reach the end page, if it is same as the start page")
     @Test
-    public void test_StartPageSameAsExpectedPage_ClickLimitZero_ReturnTrue() {
-        TestResult result = test
+    public void test_TestRunner_StartPageSameAsExpectedPage_ClickLimitZero_ReturnTrue() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Philosophie")
                 .clickLimit(0)
@@ -118,8 +118,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure the end page is reached, if it is same as the start page and click limit is 2")
     @Test
-    public void test_StartPageSameAsExpectedPage_ClickLimitGreaterZero_ReturnTrue() {
-        TestResult result = test
+    public void test_TestRunner_StartPageSameAsExpectedPage_ClickLimitGreaterZero_ReturnTrue() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Philosophie")
                 .clickLimit(2)
@@ -134,8 +134,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Philosophie\" is reached from \"Begriff (Philosophie)\" after 2 steps")
     @Test
-    public void test_StartPageOneHopAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
-        TestResult result = test
+    public void test_TestRunner_StartPageOneHopAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Begriff (Philosophie)")
                 .clickLimit(2)
@@ -150,8 +150,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Philosophie\" is reached from \"Wissensgebiet\" after 2 steps")
     @Test
-    public void test_StartPageTwoHopsAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
-        TestResult result = test
+    public void test_TestRunner_StartPageTwoHopsAwayFromExpectedPage_ClickLimitTwo_ReturnTrue() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Wissensgebiet")
                 .clickLimit(2)
@@ -168,8 +168,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Philosophie\" is reached from \"Fachgebiet\" after 2 steps")
     @Test
-    public void test_StartPageThreeHopsAwayFromExpectedPage_ClickLimitTwo_ReturnFalse() {
-        TestResult result = test
+    public void test_TestRunner_StartPageThreeHopsAwayFromExpectedPage_ClickLimitTwo_ReturnFalse() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Fachgebiet")
                 .clickLimit(2)
@@ -186,8 +186,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Übereignung\" is reached from \"Kredit\" after 1 step")
     @Test
-    public void test_FirstLinkIsInsideBrackets_ClickFirstLinkOutsideBrackets() {
-        TestResult result = test
+    public void test_TestRunner_FirstLinkIsInsideBrackets_ClickFirstLinkOutsideBrackets() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Kredit")
                 .clickLimit(1)
@@ -202,8 +202,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Bundesstaat (Föderaler Staat)\" is reached from \"Deutschland\" after 1 step")
     @Test
-    public void test_FirstLinkIsInsideBracketsAndHasUnreadableCharacters_ClickFirstLinkOutsideBrackets() {
-        TestResult result = test
+    public void test_TestRunner_FirstLinkIsInsideBracketsAndHasUnreadableCharacters_ClickFirstLinkOutsideBrackets() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Deutschland")
                 .clickLimit(1)
@@ -220,8 +220,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Football League First Division\" is reached from \"Football League First Division 1903/04\" after 1 step")
     @Test
-    public void test_FirstLinkIsInBoldStyle_ClickBoldStyleLink() {
-        TestResult result = test
+    public void test_TestRunner_FirstLinkIsInBoldStyle_ClickBoldStyleLink() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Football League First Division 1903/04")
                 .clickLimit(1)
@@ -238,8 +238,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Gattung (Literatur)\" is reached from \"Idyll\" after 1 step")
     @Test
-    public void test_LinkInBracketsHasSpecialRegexCharacter_ClickFirstLinkOutsideBrackets() {
-        TestResult result = test
+    public void test_TestRunner_LinkInBracketsHasSpecialRegexCharacter_ClickFirstLinkOutsideBrackets() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Idyll")
                 .clickLimit(1)
@@ -254,8 +254,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure \"Lend (Graz)\" is reached from \"Mühl-Schlössl\" after 1 step")
     @Test
-    public void test_FirstLinkIsItalicStyle_ClickFirstLinkNormalStyle() {
-        TestResult result = test
+    public void test_TestRunner_FirstLinkIsItalicStyle_ClickFirstLinkNormalStyle() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Mühl-Schlössl")
                 .clickLimit(1)
@@ -270,8 +270,8 @@ public class IntegrationTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Make sure loop in path is detected and LoopException is thrown")
     @Test
-    public void test_PathContainsLoop_DetectLoopEarlyAndReturnFalse() {
-        TestResult result = test
+    public void test_TestRunner_PathContainsLoop_DetectLoopEarlyAndReturnFalse() {
+        TestResult result = testRunner
                 .language("de")
                 .startPage("Coca-Cola")
                 .clickLimit(100)

@@ -1,5 +1,7 @@
 package ch.hslu.swt.wikilenium.core;
 
+import io.qameta.allure.Step;
+
 public class TestResult {
 
     private final boolean isPassed;
@@ -12,6 +14,7 @@ public class TestResult {
         this.pathTaken = pathTaken;
     }
 
+    @Step("Get test result")
     public boolean isPassed() {
         return isPassed;
     }

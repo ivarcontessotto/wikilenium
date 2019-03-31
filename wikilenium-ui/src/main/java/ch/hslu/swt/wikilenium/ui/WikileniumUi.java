@@ -65,7 +65,7 @@ public class WikileniumUi {
 
             List<String> validationMessages = validateInput(selectedLanguage, startPage, endPage, maximumNumber);
             if (validationMessages.isEmpty()) {
-                TestRunner testRunner = new Wikilenium().getChromeTestRunner();
+                TestRunner testRunner = new Wikilenium().getTestRunner(Wikilenium.Browser.CHROME);
                 TestResult result = testRunner.language(selectedLanguage.getId()).startPage(startPage).goalPage(endPage)
                         .clickLimit(Integer.parseInt(maximumNumber)).run();
                 if (result.isPassed()) {
