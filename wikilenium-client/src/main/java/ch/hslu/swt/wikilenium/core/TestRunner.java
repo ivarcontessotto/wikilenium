@@ -58,14 +58,6 @@ public class TestRunner {
         return this;
     }
 
-    public boolean runInChrome() {
-        return run(driverFactory::getChromeDriver);
-    }
-
-    public boolean runInFirefox() {
-        return run(driverFactory::getFirefoxDriver);
-    }
-
     int getClickCount() {
         return pathTaken.size() - 1;
     }
@@ -74,15 +66,14 @@ public class TestRunner {
         return pathTaken.toArray(new String[0]);
     }
 
-    private boolean run(FactoryFunc factory) {
+    public boolean run() {
         validateSetup();
-        driver = factory.getDriver();
+        driver = driverFactory.getWebDriver();
         boolean result = runTest();
-        closeDriver();
+        driver.close();
         return result;
     }
 
-    @Step("Validate test input")
     private void validateSetup() {
         if (Strings.isNullOrEmpty(language)) {
             throw new IllegalStateException("Language is not setup.");
@@ -111,6 +102,7 @@ public class TestRunner {
         System.out.println("Start page: " + startUrl);
     }
 
+    @Step("Click links until page found or limit reached")
     private void clickLinksUntilPageFoundOrLimitReached() {
         pathTaken.add(getCurrentPageName());
         int i = 0;
@@ -181,14 +173,5 @@ public class TestRunner {
         if (matcher.find())
             return Optional.of(matcher.start());
         return Optional.empty();
-    }
-
-    @Step("Close browser")
-    private void closeDriver() {
-        driver.close();
-    }
-
-    private interface FactoryFunc {
-        WebDriver getDriver();
     }
 }

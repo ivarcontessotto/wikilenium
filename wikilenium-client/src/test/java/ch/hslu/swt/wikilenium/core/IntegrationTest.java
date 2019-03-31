@@ -1,6 +1,5 @@
 package ch.hslu.swt.wikilenium.core;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +19,7 @@ public class IntegrationTest {
 
     @Before
     public void testSetup() {
-        test = wikilenium.getTestRunner();
+        test = wikilenium.getChromeTestRunner();
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -31,7 +30,7 @@ public class IntegrationTest {
                 .startPage("Something")
                 .clickLimit(0)
                 .goalPage("Something")
-                .runInChrome();
+                .run();
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -42,7 +41,7 @@ public class IntegrationTest {
                 .startPage("Something")
                 .clickLimit(0)
                 .goalPage("Something")
-                .runInChrome();
+                .run();
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -53,7 +52,7 @@ public class IntegrationTest {
                 .startPage(null)
                 .clickLimit(0)
                 .goalPage("Something")
-                .runInChrome();
+                .run();
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -64,7 +63,7 @@ public class IntegrationTest {
                 .startPage("")
                 .clickLimit(0)
                 .goalPage("Something")
-                .runInChrome();
+                .run();
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -75,7 +74,7 @@ public class IntegrationTest {
                 .startPage("Something")
                 .clickLimit(-1)
                 .goalPage("Something")
-                .runInChrome();
+                .run();
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -86,7 +85,7 @@ public class IntegrationTest {
                 .startPage("Something")
                 .clickLimit(0)
                 .goalPage(null)
-                .runInChrome();
+                .run();
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -97,7 +96,7 @@ public class IntegrationTest {
                 .startPage("Something")
                 .clickLimit(0)
                 .goalPage("")
-                .runInChrome();
+                .run();
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -109,7 +108,7 @@ public class IntegrationTest {
                 .startPage("Philosophie")
                 .clickLimit(0)
                 .goalPage("Philosophie")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Philosophie" }, test.getPathTaken());
@@ -125,7 +124,7 @@ public class IntegrationTest {
                 .startPage("Philosophie")
                 .clickLimit(2)
                 .goalPage("Philosophie")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Philosophie" }, test.getPathTaken());
@@ -141,7 +140,7 @@ public class IntegrationTest {
                 .startPage("Begriff (Philosophie)")
                 .clickLimit(2)
                 .goalPage("Philosophie")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Begriff (Philosophie)", "Philosophie" }, test.getPathTaken());
@@ -157,7 +156,7 @@ public class IntegrationTest {
                 .startPage("Wissensgebiet")
                 .clickLimit(2)
                 .goalPage("Philosophie")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(
@@ -175,7 +174,7 @@ public class IntegrationTest {
                 .startPage("Fachgebiet")
                 .clickLimit(2)
                 .goalPage("Philosophie")
-                .runInChrome();
+                .run();
 
         Assert.assertFalse(result);
         Assert.assertArrayEquals(
@@ -193,7 +192,7 @@ public class IntegrationTest {
                 .startPage("Kredit")
                 .clickLimit(1)
                 .goalPage("Übereignung")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Kredit", "Übereignung" }, test.getPathTaken());
@@ -209,7 +208,7 @@ public class IntegrationTest {
                 .startPage("Deutschland")
                 .clickLimit(1)
                 .goalPage("Bundesstaat (Föderaler Staat)")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(
@@ -227,7 +226,7 @@ public class IntegrationTest {
                 .startPage("Football League First Division 1903/04")
                 .clickLimit(1)
                 .goalPage("Football League First Division")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(
@@ -245,7 +244,7 @@ public class IntegrationTest {
                 .startPage("Idyll")
                 .clickLimit(1)
                 .goalPage("Gattung (Literatur)")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Idyll", "Gattung (Literatur)" }, test.getPathTaken());
@@ -261,7 +260,7 @@ public class IntegrationTest {
                 .startPage("Mühl-Schlössl")
                 .clickLimit(1)
                 .goalPage("Lend (Graz)")
-                .runInChrome();
+                .run();
 
         Assert.assertTrue(result);
         Assert.assertArrayEquals(new String[] { "Mühl-Schlössl", "Lend (Graz)" }, test.getPathTaken());
@@ -277,7 +276,7 @@ public class IntegrationTest {
                 .startPage("Coca-Cola")
                 .clickLimit(100)
                 .goalPage("Philosophie")
-                .runInChrome();
+                .run();
 
         Assert.assertFalse(result);
         Assert.assertArrayEquals(

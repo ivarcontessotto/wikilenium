@@ -64,9 +64,9 @@ public class WikileniumUi {
 
             List<String> validationMessages = validateInput(selectedLanguage, startPage, endPage, maximumNumber);
             if (validationMessages.isEmpty()) {
-                TestRunner testRunner = new Wikilenium().getTestRunner();
+                TestRunner testRunner = new Wikilenium().getChromeTestRunner();
                 if (testRunner.language(selectedLanguage.getId()).startPage(startPage).goalPage(endPage)
-                        .clickLimit(Integer.parseInt(maximumNumber)).runInChrome()) {
+                        .clickLimit(Integer.parseInt(maximumNumber)).run()) {
                     JOptionPane.showMessageDialog(frame, "Congratulations! The goal page was reached",
                             "Test failed", JOptionPane.INFORMATION_MESSAGE);
                 } else {
