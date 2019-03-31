@@ -70,10 +70,11 @@ public class TestRunner {
         validateSetup();
         driver = driverFactory.getWebDriver();
         boolean result = runTest();
-        driver.close();
+        closeDriver();
         return result;
     }
 
+    @Step("Validate test input")
     private void validateSetup() {
         if (Strings.isNullOrEmpty(language)) {
             throw new IllegalStateException("Language is not setup.");
@@ -102,7 +103,7 @@ public class TestRunner {
         System.out.println("Start page: " + startUrl);
     }
 
-    @Step("Click links until page found or limit reached")
+    @Step("Clicking through wikipedia")
     private void clickLinksUntilPageFoundOrLimitReached() {
         pathTaken.add(getCurrentPageName());
         int i = 0;
@@ -173,5 +174,12 @@ public class TestRunner {
         if (matcher.find())
             return Optional.of(matcher.start());
         return Optional.empty();
+    }
+
+    @Step("Close web browser")
+    private void closeDriver() {
+        if (driver != null) {
+            driver.close();
+        }
     }
 }
