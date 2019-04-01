@@ -37,6 +37,11 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi-ooxml.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -115,5 +120,6 @@
         <driver.version>3.141.59</driver.version>
         <slf4j.version>1.7.26</slf4j.version>
         <enforcer.plugin.version>1.4.1</enforcer.plugin.version>
+        <poi-ooxml.version>4.0.1</poi-ooxml.version>
     </properties>
 </project>

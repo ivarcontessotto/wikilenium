@@ -2,8 +2,13 @@ package ch.hslu.swt.wikilenium.core;
 
 import com.google.common.base.Strings;
 import io.qameta.allure.Step;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.FileStore;
 
 public class TestBatchRunner {
 
@@ -45,6 +50,13 @@ public class TestBatchRunner {
 
     public void run() {
         validateSetup();
+
+        try (FileInputStream fileStream = new FileInputStream(inputOutputFile)) {
+            XSSFWorkbook workbook = new XSSFWorkbook(fileStream);
+        }
+        catch (IOException e) {
+            throw new IllegalStateException("Error reading input output file.");
+        }
     }
 
     @Step("Validate test batch input")
