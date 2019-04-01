@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>ch.hslu.swt</groupId>
-            <artifactId>wikilenium-client</artifactId>
+            <artifactId>wikilenium-core</artifactId>
             <version>1-SNAPSHOT</version>
         </dependency>
     </dependencies>

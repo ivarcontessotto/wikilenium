@@ -8,7 +8,7 @@
     </parent>
 
     <groupId>ch.hslu.swt</groupId>
-    <artifactId>wikilenium-client</artifactId>
+    <artifactId>wikilenium-core</artifactId>
     <version>1-SNAPSHOT</version>
 
     <dependencies>
@@ -54,7 +54,7 @@
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
             </testResource>
         </testResources>
         <plugins>
