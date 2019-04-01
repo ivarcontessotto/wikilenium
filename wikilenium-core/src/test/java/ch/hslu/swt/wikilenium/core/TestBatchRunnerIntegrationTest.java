@@ -18,7 +18,7 @@ public class TestBatchRunnerIntegrationTest {
     private final String TEST_FILE_NAME = "TestBatch.xlsx";
     private final Wikilenium wikilenium;
     private Path resourceFilePath;
-    private File notExistingFile;
+    private File excelFile;
     private TestBatchRunner testBatchRunner;
 
     public TestBatchRunnerIntegrationTest() throws URISyntaxException {
@@ -34,7 +34,7 @@ public class TestBatchRunnerIntegrationTest {
     public void testSetup() throws IOException {
         Path excelFilePath = Paths.get(temporaryFolder.getRoot().getPath(), "TestBatch.xlsx");
         Files.copy(resourceFilePath, excelFilePath, StandardCopyOption.REPLACE_EXISTING);
-        notExistingFile = excelFilePath.toFile();
+        excelFile = excelFilePath.toFile();
         testBatchRunner = wikilenium.getTestBatchRunner(Wikilenium.Browser.CHROME);
     }
 
@@ -45,7 +45,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language(null)
                 .clickLimit(0)
                 .goalPage("Something")
-                .inputOutputFile(notExistingFile)
+                .inputOutputFile(excelFile)
                 .run();
     }
 
@@ -56,7 +56,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language("")
                 .clickLimit(0)
                 .goalPage("Something")
-                .inputOutputFile(notExistingFile)
+                .inputOutputFile(excelFile)
                 .run();
     }
 
@@ -67,7 +67,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language("de")
                 .clickLimit(-1)
                 .goalPage("Philosophie")
-                .inputOutputFile(notExistingFile)
+                .inputOutputFile(excelFile)
                 .run();
     }
 
@@ -78,7 +78,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language("de")
                 .clickLimit(0)
                 .goalPage(null)
-                .inputOutputFile(notExistingFile)
+                .inputOutputFile(excelFile)
                 .run();
     }
 
@@ -89,7 +89,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language("de")
                 .clickLimit(0)
                 .goalPage("")
-                .inputOutputFile(notExistingFile)
+                .inputOutputFile(excelFile)
                 .run();
     }
 
@@ -108,12 +108,21 @@ public class TestBatchRunnerIntegrationTest {
     @Description("Make sure input output file exists")
     @Test(expected = IllegalStateException.class)
     public void test_TestBatchRunner_InputOutputFileDoesNotExist_ThrowException() {
-        notExistingFile = Paths.get(temporaryFolder.getRoot().getPath(), "NotExisting.xlsx").toFile();
+        File notExistingFile = Paths.get(temporaryFolder.getRoot().getPath(), "NotExisting.xlsx").toFile();
 
         testBatchRunner.language("de")
                 .clickLimit(0)
                 .goalPage("Philosophie")
                 .inputOutputFile(notExistingFile)
+                .run();
+    }
+
+    @Test
+    public void test() {
+        testBatchRunner.language("de")
+                .clickLimit(2)
+                .goalPage("Philosophie")
+                .inputOutputFile(excelFile)
                 .run();
     }
 }
