@@ -2,22 +2,20 @@ package ch.hslu.swt.wikilenium.core;
 
 import com.google.common.base.Strings;
 import io.qameta.allure.Step;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileStore;
 
 public class TestBatchRunner {
 
+    private final TestRunner testRunner;
     private String language;
     private int clickLimit;
     private String goalPageName;
     private File inputOutputFile;
 
     TestBatchRunner(TestRunner testRunner) {
+        this.testRunner = testRunner;
         language = null;
         clickLimit = -1;
         goalPageName = null;
@@ -50,12 +48,31 @@ public class TestBatchRunner {
 
     public void run() {
         validateSetup();
+        try {
+            String[] startPageColumnEntries = ExcelFileHelper.readColumn(0, inputOutputFile);
+            if (startPageColumnEntries.length < 1 ||
+                !startPageColumnEntries[0].equals("Start Page")) {
 
-        try (FileInputStream fileStream = new FileInputStream(inputOutputFile)) {
-            XSSFWorkbook workbook = new XSSFWorkbook(fileStream);
-        }
-        catch (IOException e) {
-            throw new IllegalStateException("Error reading input output file.");
+                throw new IllegalStateException("Input output file does not have columns 'Start Page' and 'Test Result'");
+            }
+
+            String[] testResults = new String[startPageColumnEntries.length];
+            testResults[0] = "Test Result";
+            testRunner.language(language).goalPage(goalPageName).clickLimit(clickLimit);
+            for (int i = 1; i < startPageColumnEntries.length; i++) {
+                System.out.println(startPageColumnEntries[i]);
+                TestResult result = testRunner.startPage(startPageColumnEntries[i]).run();
+                if (result.isPassed()) {
+                    testResults[i] = Integer.toString(result.getClickCount());
+                } else {
+                    testResults[i] = "Failed";
+                }
+            }
+
+            ExcelFileHelper.writeColumn(1, testResults, inputOutputFile);
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Error reading input output file");
         }
     }
 

@@ -3,6 +3,7 @@ package ch.hslu.swt.wikilenium.core;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,18 +13,18 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.util.List;
 
 public class TestBatchRunnerIntegrationTest {
 
-    private final String TEST_FILE_NAME = "TestBatch.xlsx";
+    private final String VALID_FILE_NAME = "ValidTestBatch.xlsx";
     private final Wikilenium wikilenium;
-    private Path resourceFilePath;
-    private File excelFile;
+    private Path validResourceFilePath;
+    private File validTempFile;
     private TestBatchRunner testBatchRunner;
 
     public TestBatchRunnerIntegrationTest() throws URISyntaxException {
-
-        resourceFilePath = Paths.get(getClass().getResource("/" + TEST_FILE_NAME).toURI());
+        validResourceFilePath = Paths.get(getClass().getResource("/" + VALID_FILE_NAME).toURI());
         wikilenium = new Wikilenium();
     }
 
@@ -32,9 +33,9 @@ public class TestBatchRunnerIntegrationTest {
 
     @Before
     public void testSetup() throws IOException {
-        Path excelFilePath = Paths.get(temporaryFolder.getRoot().getPath(), "TestBatch.xlsx");
-        Files.copy(resourceFilePath, excelFilePath, StandardCopyOption.REPLACE_EXISTING);
-        excelFile = excelFilePath.toFile();
+        Path validTempFilePath = Paths.get(temporaryFolder.getRoot().getPath(), VALID_FILE_NAME);
+        Files.copy(validResourceFilePath, validTempFilePath, StandardCopyOption.REPLACE_EXISTING);
+        validTempFile = validTempFilePath.toFile();
         testBatchRunner = wikilenium.getTestBatchRunner(Wikilenium.Browser.CHROME);
     }
 
@@ -45,7 +46,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language(null)
                 .clickLimit(0)
                 .goalPage("Something")
-                .inputOutputFile(excelFile)
+                .inputOutputFile(validTempFile)
                 .run();
     }
 
@@ -56,7 +57,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language("")
                 .clickLimit(0)
                 .goalPage("Something")
-                .inputOutputFile(excelFile)
+                .inputOutputFile(validTempFile)
                 .run();
     }
 
@@ -67,7 +68,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language("de")
                 .clickLimit(-1)
                 .goalPage("Philosophie")
-                .inputOutputFile(excelFile)
+                .inputOutputFile(validTempFile)
                 .run();
     }
 
@@ -78,7 +79,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language("de")
                 .clickLimit(0)
                 .goalPage(null)
-                .inputOutputFile(excelFile)
+                .inputOutputFile(validTempFile)
                 .run();
     }
 
@@ -89,7 +90,7 @@ public class TestBatchRunnerIntegrationTest {
         testBatchRunner.language("de")
                 .clickLimit(0)
                 .goalPage("")
-                .inputOutputFile(excelFile)
+                .inputOutputFile(validTempFile)
                 .run();
     }
 
@@ -108,21 +109,45 @@ public class TestBatchRunnerIntegrationTest {
     @Description("Make sure input output file exists")
     @Test(expected = IllegalStateException.class)
     public void test_TestBatchRunner_InputOutputFileDoesNotExist_ThrowException() {
-        File notExistingFile = Paths.get(temporaryFolder.getRoot().getPath(), "NotExisting.xlsx").toFile();
+        File notExistingTempFile = Paths.get(temporaryFolder.getRoot().getPath(), "NotExisting.xlsx").toFile();
 
         testBatchRunner.language("de")
                 .clickLimit(0)
                 .goalPage("Philosophie")
-                .inputOutputFile(notExistingFile)
+                .inputOutputFile(notExistingTempFile)
                 .run();
     }
 
-    @Test
-    public void test() {
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Make sure input output file has expected two columns")
+    @Test(expected = IllegalStateException.class)
+    public void test_TestBatchRunner_InputOutputFileHasWrongColumns_ThrowException() throws URISyntaxException, IOException {
+        String invalidFileName = "InvalidTestBatch.xlsx";
+        Path invalidResourceFilePath = Paths.get(getClass().getResource("/" + invalidFileName).toURI());
+        Path invalidTempFilePath = Paths.get(temporaryFolder.getRoot().getPath(), invalidFileName);
+        Files.copy(invalidResourceFilePath, invalidTempFilePath, StandardCopyOption.REPLACE_EXISTING);
+        File invalidTempFile = invalidTempFilePath.toFile();
+
         testBatchRunner.language("de")
                 .clickLimit(2)
                 .goalPage("Philosophie")
-                .inputOutputFile(excelFile)
+                .inputOutputFile(invalidTempFile)
                 .run();
+    }
+
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Make sure the test results from a batch run are stored to the input output file.")
+    @Test
+    public void test_TestBatchRunner_TestRunFinished_InputOutputFileContainsResults() throws IOException {
+        testBatchRunner.language("de")
+                .clickLimit(1)
+                .goalPage("Philosophie")
+                .inputOutputFile(validTempFile)
+                .run();
+
+        String[] testResultColumnEntries = ExcelFileHelper.readColumn(1, validTempFile);
+        Assert.assertEquals(5, testResultColumnEntries.length);
+        Assert.assertArrayEquals(new String[] { "Test Result", "0", "1", "Failed", "Failed"},
+                testResultColumnEntries);
     }
 }

@@ -63,7 +63,9 @@ public class TestRunner {
         driver = driverFactory.getWebDriver();
         boolean isPassed = runTest();
         closeDriver();
-        return new TestResult(isPassed, pathTaken.size() - 1, pathTaken.toArray(new String[0]));
+        TestResult result = new TestResult(isPassed, pathTaken.size() - 1, pathTaken.toArray(new String[0]));
+        pathTaken.clear();
+        return result;
     }
 
     @Step("Validate test input")
