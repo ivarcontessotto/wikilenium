@@ -145,7 +145,7 @@ public class TestBatchRunnerIntegrationTest {
                 .inputOutputFile(validTempFile)
                 .run();
 
-        String[] testResultColumnEntries = ExcelFileHelper.readColumn(1, validTempFile);
+        String[] testResultColumnEntries = ExcelFileHelper.readColumn(1, true, validTempFile);
         Assert.assertEquals(5, testResultColumnEntries.length);
         Assert.assertArrayEquals(new String[] { "Test Result", "0", "1", "Failed", "Failed"},
                 testResultColumnEntries);

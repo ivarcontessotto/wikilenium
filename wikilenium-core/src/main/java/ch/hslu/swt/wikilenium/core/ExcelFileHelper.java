@@ -1,38 +1,78 @@
 package ch.hslu.swt.wikilenium.core;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.LinkedList;
 
 class ExcelFileHelper {
 
-    static String[] readColumn(int index, File excelFile) throws IOException {
-        try (Workbook workbook = new XSSFWorkbook(new FileInputStream(excelFile))) {
+    static String[] readHeader(File excelFile) throws IOException {
+        try (XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(excelFile))) {
+            Sheet sheet = workbook.getSheetAt(0);
+            LinkedList<String> header = new LinkedList<>();
+            Row row = sheet.getRow(0);
+            if (row == null) {
+                return new String[0];
+            }
+            int lastCellNumber = row.getLastCellNum();
+            for(int columnIndex = 0; columnIndex < lastCellNumber; columnIndex++) {
+                Cell cell = row.getCell(columnIndex);
+                if (cell != null) {
+                    header.add(cell.toString());
+                }
+                else {
+                    header.add("");
+                }
+            }
+            return header.toArray(new String[0]);
+        }
+    }
+
+    static String[] readColumn(int index, boolean readHeader, File excelFile) throws IOException {
+        try (XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(excelFile))) {
             Sheet sheet = workbook.getSheetAt(0);
             LinkedList<String> entries = new LinkedList<>();
-            sheet.forEach(row -> {
-                Cell cell = row.getCell(index);
+            int numberOfFilledRows = sheet.getPhysicalNumberOfRows();
+            int rowStartIndex = 0;
+            if (!readHeader) {
+                rowStartIndex = 1;
+            }
+            for(int rowIndex = rowStartIndex; rowIndex < numberOfFilledRows; rowIndex++) {
+                Cell cell = sheet.getRow(rowIndex).getCell(index);
                 if (cell != null) {
                     entries.add(cell.toString());
                 }
-            });
+            }
             return entries.toArray(new String[0]);
         }
     }
 
-    static void writeColumn(int index, String[] cellEntries, File excelFile) throws IOException {
-        try (Workbook workbook = new XSSFWorkbook(new FileInputStream(excelFile))) {
+    static void writeColumn(int index, boolean writeHeader, String[] values, File excelFile) throws IOException {
+        try (XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(excelFile))) {
             Sheet sheet = workbook.getSheetAt(0);
-            for (int i = 0; i < cellEntries.length; i++) {
-                sheet.getRow(i).createCell(index).setCellValue(cellEntries[i]);
-                System.out.println(sheet.getRow(i).getCell(index).toString());
+            int valuesStartIndex = 0;
+            if (writeHeader) {
+                sheet.getRow(0).createCell(index).setCellValue(values[0]);
+                Cell cell = sheet.getRow(0).createCell(0);
+                cell.setCellValue(values[0]);
+
+                XSSFFont font = workbook.createFont();
+                font.setBold(true);
+                XSSFCellStyle style = workbook.createCellStyle();
+                style.setFont(font);
+                cell.setCellValue(values[0]);
+                cell.setCellStyle(style);
+
+                valuesStartIndex = 1;
+            }
+            for (int valueIndex = valuesStartIndex, rowIndex = 1; valueIndex < values.length; valueIndex++, rowIndex++) {
+                sheet.getRow(rowIndex).createCell(index).setCellValue(values[valueIndex]);
             }
             try(FileOutputStream outputStream = new FileOutputStream(excelFile)) {
                 workbook.write(outputStream);

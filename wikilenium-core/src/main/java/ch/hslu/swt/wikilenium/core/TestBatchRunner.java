@@ -49,19 +49,13 @@ public class TestBatchRunner {
     public void run() {
         validateSetup();
         try {
-            String[] startPageColumnEntries = ExcelFileHelper.readColumn(0, inputOutputFile);
-            if (startPageColumnEntries.length < 1 ||
-                !startPageColumnEntries[0].equals("Start Page")) {
+            validateInputOutputFileFormat();
+            String[] startPages = ExcelFileHelper.readColumn(0, false, inputOutputFile);
 
-                throw new IllegalStateException("Input output file does not have columns 'Start Page' and 'Test Result'");
-            }
-
-            String[] testResults = new String[startPageColumnEntries.length];
-            testResults[0] = "Test Result";
+            String[] testResults = new String[startPages.length];
             testRunner.language(language).goalPage(goalPageName).clickLimit(clickLimit);
-            for (int i = 1; i < startPageColumnEntries.length; i++) {
-                System.out.println(startPageColumnEntries[i]);
-                TestResult result = testRunner.startPage(startPageColumnEntries[i]).run();
+            for (int i = 0; i < startPages.length; i++) {
+                TestResult result = testRunner.startPage(startPages[i]).run();
                 if (result.isPassed()) {
                     testResults[i] = Integer.toString(result.getClickCount());
                 } else {
@@ -69,7 +63,7 @@ public class TestBatchRunner {
                 }
             }
 
-            ExcelFileHelper.writeColumn(1, testResults, inputOutputFile);
+            ExcelFileHelper.writeColumn(1, false, testResults, inputOutputFile);
 
         } catch (IOException e) {
             throw new IllegalStateException("Error reading input output file");
@@ -89,6 +83,14 @@ public class TestBatchRunner {
         }
         if (inputOutputFile == null) {
             throw new IllegalStateException("Batch input output file not setup");
+        }
+    }
+
+    @Step("Validate input output file format")
+    private void validateInputOutputFileFormat() throws IOException {
+        String[] header = ExcelFileHelper.readHeader(inputOutputFile);
+        if (header.length < 2 || !header[0].equals("Start Page") || !header[1].equals("Test Result")) {
+            throw new IllegalStateException("Input output file does not have columns 'Start Page' and 'Test Result'");
         }
     }
 }
