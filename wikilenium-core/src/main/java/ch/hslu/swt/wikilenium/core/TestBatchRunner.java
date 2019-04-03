@@ -51,20 +51,8 @@ public class TestBatchRunner {
         try {
             validateInputOutputFileFormat();
             String[] startPages = ExcelFileHelper.readColumn(0, false, inputOutputFile);
-
-            String[] testResults = new String[startPages.length];
-            testRunner.language(language).goalPage(goalPageName).clickLimit(clickLimit);
-            for (int i = 0; i < startPages.length; i++) {
-                TestResult result = testRunner.startPage(startPages[i]).run();
-                if (result.isPassed()) {
-                    testResults[i] = Integer.toString(result.getClickCount());
-                } else {
-                    testResults[i] = "Failed";
-                }
-            }
-
+            String[]testResults = runTestCases(startPages);
             ExcelFileHelper.writeColumn(1, false, testResults, inputOutputFile);
-
         } catch (IOException e) {
             throw new IllegalStateException("Error reading input output file");
         }
@@ -92,5 +80,20 @@ public class TestBatchRunner {
         if (header.length < 2 || !header[0].equals("Start Page") || !header[1].equals("Test Result")) {
             throw new IllegalStateException("Input output file does not have columns 'Start Page' and 'Test Result'");
         }
+    }
+
+    @Step("Run test cases")
+    private String[] runTestCases(String[] startPages) {
+        String[] testResults = new String[startPages.length];
+        testRunner.language(language).goalPage(goalPageName).clickLimit(clickLimit);
+        for (int i = 0; i < startPages.length; i++) {
+            TestResult result = testRunner.startPage(startPages[i]).run();
+            if (result.isPassed()) {
+                testResults[i] = Integer.toString(result.getClickCount());
+            } else {
+                testResults[i] = "Failed";
+            }
+        }
+        return testResults;
     }
 }
