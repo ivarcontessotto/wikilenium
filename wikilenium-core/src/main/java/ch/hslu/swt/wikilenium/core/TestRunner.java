@@ -151,8 +151,6 @@ public class TestRunner {
     }
 
     private boolean linkIsNotInBrackets(String linkText, String parentTagText) {
-        // System.out.println("Inspecting link: " + linkText);
-        // System.out.println("Current section: " + parentTagText);
         Optional<Integer> firstMatch = findFirstMatch(linkText, parentTagText);
         Optional<Integer> firstMatchNotInBrackets = findFirstMatchNotInBrackets(linkText, parentTagText);
         return firstMatch.isPresent() &&
