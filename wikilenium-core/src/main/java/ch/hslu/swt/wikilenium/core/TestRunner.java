@@ -91,10 +91,7 @@ public class TestRunner {
 
     private boolean runTest() {
         goToStartPage();
-        clickLinksUntilPageFoundOrLimitReached();
-        boolean isPassed = currentPageIsGoal();
-        setRegularFailReason(isPassed);
-        return isPassed;
+        return tryClickingToGoalPage();
     }
 
     @Step("Go to start page")
@@ -105,18 +102,19 @@ public class TestRunner {
     }
 
     @Step("Clicking through wikipedia")
-    private void clickLinksUntilPageFoundOrLimitReached() {
-        pathTaken.add(getCurrentPageName());
+    private boolean tryClickingToGoalPage() {
+        String currentPageName = getCurrentPageName();
+        pathTaken.add(currentPageName);
         int i = 0;
-        while (!currentPageIsGoal() && i < clickLimit) {
+        while (!isGoalPage(currentPageName) && i < clickLimit) {
             Optional<WebElement> matchingLink = getFirstMatchingLinkInContent();
-            String currentPageName = getCurrentPageName();
             if (!matchingLink.isPresent()) {
                 setDeadEndFailReason(currentPageName);
                 break;
             }
             System.out.println(String.format("Clicking link: %s", matchingLink.get().getText()));
             matchingLink.get().click();
+            currentPageName = getCurrentPageName();
             if (pathTaken.contains(currentPageName)) {
                 pathTaken.add(currentPageName);
                 setLoopFailReason();
@@ -125,10 +123,13 @@ public class TestRunner {
             pathTaken.add(currentPageName);
             i++;
         }
+        boolean isPassed = isGoalPage(currentPageName);
+        setRegularFailReason(isPassed);
+        return isPassed;
     }
 
-    private boolean currentPageIsGoal() {
-        return getCurrentPageName().contentEquals(goalPageName);
+    private boolean isGoalPage(String currentPageName) {
+        return currentPageName.equals(goalPageName);
     }
 
     private String getCurrentPageName() {

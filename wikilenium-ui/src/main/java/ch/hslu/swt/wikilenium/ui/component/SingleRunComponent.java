@@ -58,7 +58,7 @@ public class SingleRunComponent extends JPanel {
                     JOptionPane.showMessageDialog(this, "Congratulations! The goal page was reached", "Test passed",
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this, "The goal page was not reached", "Test failed",
+                    JOptionPane.showMessageDialog(this, result.getFailReason(), "Test failed",
                             JOptionPane.ERROR_MESSAGE);
                 }
             } else {
