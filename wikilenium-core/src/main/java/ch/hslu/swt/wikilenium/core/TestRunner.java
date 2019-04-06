@@ -16,6 +16,8 @@ import io.qameta.allure.Step;
 
 public class TestRunner {
 
+    private static final String EMPTY_STRING = "";
+
     private final WebDriverFactory driverFactory;
     private WebDriver driver;
     private String language;
@@ -23,6 +25,7 @@ public class TestRunner {
     private int clickLimit;
     private String goalPageName;
     private List<String> pathTaken;
+    private String failReason;
 
     TestRunner(WebDriverFactory webDriverFactory) {
         driverFactory = webDriverFactory;
@@ -32,6 +35,7 @@ public class TestRunner {
         clickLimit = -1;
         goalPageName = null;
         pathTaken = new LinkedList<>();
+        failReason = EMPTY_STRING;
     }
 
     @Step("Set language to {0}")
@@ -63,8 +67,9 @@ public class TestRunner {
         driver = driverFactory.getWebDriver();
         boolean isPassed = runTest();
         closeDriver();
-        TestResult result = new TestResult(isPassed, pathTaken.size() - 1, pathTaken.toArray(new String[0]));
+        TestResult result = new TestResult(isPassed, failReason, pathTaken.size() - 1, pathTaken.toArray(new String[0]));;
         pathTaken.clear();
+        failReason = EMPTY_STRING;
         return result;
     }
 
@@ -87,7 +92,9 @@ public class TestRunner {
     private boolean runTest() {
         goToStartPage();
         clickLinksUntilPageFoundOrLimitReached();
-        return currentPageIsGoal();
+        boolean isPassed = currentPageIsGoal();
+        setRegularFailReason(isPassed);
+        return isPassed;
     }
 
     @Step("Go to start page")
@@ -103,16 +110,16 @@ public class TestRunner {
         int i = 0;
         while (!currentPageIsGoal() && i < clickLimit) {
             Optional<WebElement> matchingLink = getFirstMatchingLinkInContent();
+            String currentPageName = getCurrentPageName();
             if (!matchingLink.isPresent()) {
-                System.out.println("No matching links found on page.");
+                setDeadEndFailReason(currentPageName);
                 break;
             }
             System.out.println(String.format("Clicking link: %s", matchingLink.get().getText()));
             matchingLink.get().click();
-            String currentPageName = getCurrentPageName();
             if (pathTaken.contains(currentPageName)) {
                 pathTaken.add(currentPageName);
-                System.out.println("Loop in path detected.");
+                setLoopFailReason();
                 break;
             }
             pathTaken.add(currentPageName);
@@ -168,6 +175,22 @@ public class TestRunner {
         if (matcher.find())
             return Optional.of(matcher.start());
         return Optional.empty();
+    }
+
+    private void setRegularFailReason(boolean isPassed) {
+        if (!isPassed && failReason.equals(EMPTY_STRING)) {
+            failReason = String.format("Did not reach page '%s' after %d clicks.", goalPageName, clickLimit);
+        }
+    }
+
+    private void setDeadEndFailReason(String currentPageName) {
+        failReason = String.format("Dead end on page '%s'.", currentPageName);
+    }
+
+    private void setLoopFailReason() {
+        int lastIndex = pathTaken.size() - 1;
+        failReason = String.format("Endless loop detected between '%s' and '%s'.",
+                pathTaken.get(lastIndex - 1), pathTaken.get(lastIndex));
     }
 
     @Step("Close web browser")

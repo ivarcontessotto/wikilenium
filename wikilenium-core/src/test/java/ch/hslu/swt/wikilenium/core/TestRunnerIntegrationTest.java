@@ -10,6 +10,8 @@ import io.qameta.allure.SeverityLevel;
 
 public class TestRunnerIntegrationTest {
 
+    private static final String EMPTY_STRING = "";
+
     private final Wikilenium wikilenium;
     private TestRunner testRunner;
 
@@ -113,6 +115,7 @@ public class TestRunnerIntegrationTest {
         Assert.assertTrue(result.isPassed());
         Assert.assertArrayEquals(new String[] { "Philosophie" }, result.getPathTaken());
         Assert.assertEquals(0, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -129,6 +132,7 @@ public class TestRunnerIntegrationTest {
         Assert.assertTrue(result.isPassed());
         Assert.assertArrayEquals(new String[] { "Philosophie" }, result.getPathTaken());
         Assert.assertEquals(0, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -145,6 +149,7 @@ public class TestRunnerIntegrationTest {
         Assert.assertTrue(result.isPassed());
         Assert.assertArrayEquals(new String[] { "Begriff (Philosophie)", "Philosophie" }, result.getPathTaken());
         Assert.assertEquals(1, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -163,6 +168,7 @@ public class TestRunnerIntegrationTest {
                 new String[] { "Wissensgebiet", "Begriff (Philosophie)", "Philosophie" },
                 result.getPathTaken());
         Assert.assertEquals(2, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -181,6 +187,7 @@ public class TestRunnerIntegrationTest {
                 new String[] { "Fachgebiet", "Wissensgebiet", "Begriff (Philosophie)" },
                 result.getPathTaken());
         Assert.assertEquals(2, result.getClickCount());
+        Assert.assertEquals("Did not reach page 'Philosophie' after 2 clicks.", result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -197,6 +204,7 @@ public class TestRunnerIntegrationTest {
         Assert.assertTrue(result.isPassed());
         Assert.assertArrayEquals(new String[] { "Kredit", "Übereignung" }, result.getPathTaken());
         Assert.assertEquals(1, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -215,6 +223,7 @@ public class TestRunnerIntegrationTest {
                 new String[] { "Deutschland", "Bundesstaat (Föderaler Staat)" },
                 result.getPathTaken());
         Assert.assertEquals(1, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -233,6 +242,7 @@ public class TestRunnerIntegrationTest {
                 new String[] { "Football League First Division 1903/04", "Football League First Division" },
                 result.getPathTaken());
         Assert.assertEquals(1, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -249,6 +259,7 @@ public class TestRunnerIntegrationTest {
         Assert.assertTrue(result.isPassed());
         Assert.assertArrayEquals(new String[] { "Idyll", "Gattung (Literatur)" }, result.getPathTaken());
         Assert.assertEquals(1, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -265,6 +276,7 @@ public class TestRunnerIntegrationTest {
         Assert.assertTrue(result.isPassed());
         Assert.assertArrayEquals(new String[] { "Mühl-Schlössl", "Lend (Graz)" }, result.getPathTaken());
         Assert.assertEquals(1, result.getClickCount());
+        Assert.assertEquals(EMPTY_STRING, result.getFailReason());
     }
 
     @Severity(SeverityLevel.CRITICAL)
@@ -283,5 +295,22 @@ public class TestRunnerIntegrationTest {
                 new String[] { "Coca-Cola", "Marke (Marketing)", "Marketing", "Absatzwirtschaft", "Marketing" },
                 result.getPathTaken());
         Assert.assertEquals(4, result.getClickCount());
+        Assert.assertEquals("Endless loop detected between 'Absatzwirtschaft' and 'Marketing'.", result.getFailReason());
+    }
+
+    @Test
+    public void test_TestRunner_PageDoesNotContainMatchingLink_DetectDeadEndAndReturnFalse() {
+        TestResult result = testRunner
+                .language("de")
+                .startPage("auä")
+                .clickLimit(100)
+                .goalPage("Philosophie")
+                .run();
+
+        Assert.assertFalse(result.isPassed());
+        Assert.assertArrayEquals(
+                new String[] { "Auä" }, result.getPathTaken());
+        Assert.assertEquals(0, result.getClickCount());
+        Assert.assertEquals("Dead end on page 'Auä'.", result.getFailReason());
     }
 }
